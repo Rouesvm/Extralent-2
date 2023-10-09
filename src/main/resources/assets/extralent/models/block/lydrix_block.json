@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "extralent:blocks/lydrix_block_topbottom",
+    "side": "extralent:blocks/lydrix_block_side"
+  }
+}
