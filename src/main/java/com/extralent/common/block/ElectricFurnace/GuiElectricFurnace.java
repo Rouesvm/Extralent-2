@@ -27,19 +27,19 @@ public class GuiElectricFurnace extends GuiContainer {
         mc.getTextureManager().bindTexture(TEXTURES);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-        int energy = furnace.getClientEnergy();
         int progress = furnace.getClientProgress();
-        drawEnergyBar(energy);
-
         if (progress > 0) {
             int i = getProgressBarScaled(progress, 26);
             drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, i + 1, 17);
         }
+
+        int energy = furnace.getClientEnergy();
+        drawEnergyBar(energy);
     }
 
     private int getProgressBarScaled(int progress, int pixels) {
         int i = TileElectricFurnace.MAX_PROGRESS;
-        return i != 0 && progress != 0 ? pixels - progress * pixels / i : 0;
+        return progress != 0 ? pixels - progress * pixels / i : 0;
     }
 
     private void drawEnergyBar(int energy) {
