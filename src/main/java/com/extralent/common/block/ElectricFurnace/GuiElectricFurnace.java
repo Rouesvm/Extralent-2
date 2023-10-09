@@ -28,18 +28,17 @@ public class GuiElectricFurnace extends GuiContainer {
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         int progress = furnace.getClientProgress();
-        if (progress > 0) {
-            int i = getProgressBarScaled(progress, 26);
-            drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, i + 1, 17);
-        }
+        drawProgressBar(progress);
 
         int energy = furnace.getClientEnergy();
         drawEnergyBar(energy);
     }
 
-    private int getProgressBarScaled(int progress, int pixels) {
-        int i = TileElectricFurnace.MAX_PROGRESS;
-        return progress != 0 ? pixels - progress * pixels / i : 0;
+    private void drawProgressBar(int progress) {
+        if (progress > 0) {
+            int i = getProgressBarScaled(progress, 26);
+            drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, i + 1, 17);
+        }
     }
 
     private void drawEnergyBar(int energy) {
@@ -49,6 +48,11 @@ public class GuiElectricFurnace extends GuiContainer {
             int color = i % 2 == 0 ? 0xffee1c00 : 0xff590a00;
             drawHorizontalLine(guiLeft + 186, guiLeft + 204, guiTop + 13 + 1 + i, color);
         }
+    }
+
+    private int getProgressBarScaled(int progress, int pixels) {
+        int i = TileElectricFurnace.MAX_PROGRESS;
+        return progress != 0 ? pixels - progress * pixels / i : 0;
     }
 
     @Override
