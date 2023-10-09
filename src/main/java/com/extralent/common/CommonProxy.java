@@ -2,7 +2,9 @@ package com.extralent.common;
 
 import com.extralent.Extralent;
 import com.extralent.api.network.Messages;
+import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;
+import com.extralent.common.item.ModItems;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +25,7 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(Extralent.instance, new GuiHandler());
+        FuelHandler.init();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
