@@ -10,8 +10,8 @@ public class GuiElectricFurnace extends GuiContainer {
     public static final int WIDTH = 180;
     public static final int HEIGHT = 152;
 
-    private static final ResourceLocation background = new ResourceLocation(ModMisc.MODID, "textures/gui/electric_furnace_gui.png");
-    private TileElectricFurnace furnace;
+    private static final ResourceLocation TEXTURES = new ResourceLocation(ModMisc.MODID, "textures/gui/electric_furnace_gui.png");
+    private final TileElectricFurnace furnace;
 
     public GuiElectricFurnace(TileElectricFurnace tileEntity, ContainerElectricFurnace container) {
         super(container);
@@ -24,16 +24,22 @@ public class GuiElectricFurnace extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        mc.getTextureManager().bindTexture(background);
+        mc.getTextureManager().bindTexture(TEXTURES);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         int energy = furnace.getClientEnergy();
+        int progress = furnace.getClientProgress();
         drawEnergyBar(energy);
 
-        if (furnace.getClientProgress() > 0) {
-            int percentage = (100 - furnace.getClientProgress() * 100 / TileElectricFurnace.MAX_PROGRESS);
-            drawString(mc.fontRenderer, "Progress: " + percentage + "%", guiLeft + 10, guiTop + 50, 0xffffff);
+        if (progress > 0) {
+            int i = getProgressBarScaled(progress, 26);
+            drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, i + 1, 17);
         }
+    }
+
+    private int getProgressBarScaled(int progress, int pixels) {
+        int i = TileElectricFurnace.MAX_PROGRESS;
+        return i != 0 && progress != 0 ? pixels - progress * pixels / i : 0;
     }
 
     private void drawEnergyBar(int energy) {
