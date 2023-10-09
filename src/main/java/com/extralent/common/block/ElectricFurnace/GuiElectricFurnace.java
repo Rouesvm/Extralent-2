@@ -51,7 +51,7 @@ public class GuiElectricFurnace extends GuiContainer {
         renderHoveredToolTip(mouseX, mouseY);
 
         if (mouseX > guiTop + 10 && mouseX < guiLeft + 112 && mouseY > guiTop + 5 && mouseY < guiTop + 15) {
-            drawHoveringText(Collections.singletonList("Energy: " + furnace.getClientProgress()), mouseX, mouseY, fontRenderer);
+            drawHoveringText(Collections.singletonList("Energy: " + furnace.getClientEnergy()), mouseX, mouseY, fontRenderer);
         }
     }
 }

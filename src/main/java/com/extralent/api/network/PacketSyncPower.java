@@ -25,7 +25,9 @@ public class PacketSyncPower implements IMessage {
     public PacketSyncPower() {
     }
 
-    public PacketSyncPower(int energy) {this.energy = energy;}
+    public PacketSyncPower(int energy) {
+        this.energy = energy;
+    }
 
     public static class Handler implements IMessageHandler<PacketSyncPower, IMessage> {
 

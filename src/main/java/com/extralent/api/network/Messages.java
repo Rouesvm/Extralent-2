@@ -9,7 +9,9 @@ public class Messages {
     public static SimpleNetworkWrapper INSTANCE;
 
     private static int ID = 0;
-    private static int nextID() {return ID++;}
+    private static int nextID() {
+        return ID++;
+    }
 
     public static void registerMessages(String channelName) {
         INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(channelName);

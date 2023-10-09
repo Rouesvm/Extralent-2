@@ -1,6 +1,7 @@
 package com.extralent.common;
 
 import com.extralent.Extralent;
+import com.extralent.api.network.Messages;
 import com.extralent.common.core.handler.GuiHandler;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.block.Block;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 @Mod.EventBusSubscriber
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
+        Messages.registerMessages("extralent");
     }
 
     public void init(FMLInitializationEvent event) {
