@@ -1,10 +1,13 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.tools.EEnergyStorage;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -15,6 +18,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileElectricFurnace extends TileEntity implements ITickable {
 
@@ -28,6 +32,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
     public static final int RF_PER_TICK = 25;
 
     private int progress = 0;
+    private FurnaceState state = FurnaceState.OFF;
 
     private int clientProgress = -1;
     private int clientEnergy = -1;
@@ -37,9 +42,11 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
     public void update() {
         if (!world.isRemote) {
             if (energyStorage.getEnergyStored() < RF_PER_TICK) {
+                setState(FurnaceState.NOPOWER);
                 return;
             }
             if (progress > 0) {
+                setState(FurnaceState.ON);
                 energyStorage.consumePower(RF_PER_TICK);
                 progress--;
                 if (progress == 0) {
@@ -47,6 +54,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
                 }
                 markDirty();
             } else {
+                setState(FurnaceState.OFF);
                 startSmelt();
             }
         }
@@ -114,6 +122,44 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
 
     public int getEnergy() {
         return energyStorage.getEnergyStored();
+    }
+
+    //------------------------------------------------------------------------
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbtTag = super.getUpdateTag();
+        nbtTag.setInteger("state", state.ordinal());
+        return nbtTag;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        int stateIndex = packet.getNbtCompound().getInteger("state");
+
+        if (world.isRemote && stateIndex != state.ordinal()) {
+            state = FurnaceState.VALUES[stateIndex];
+            world.markBlockRangeForRenderUpdate(pos, pos);
+        }
+    }
+
+    public void setState(FurnaceState state) {
+        if (this.state != state) {
+            this.state = state;
+            markDirty();
+            IBlockState blockState = world.getBlockState(pos);
+            getWorld().notifyBlockUpdate(pos, blockState, blockState, 3);
+        }
+    }
+
+    public FurnaceState getState() {
+        return state;
     }
 
     //------------------------------------------------------------------------
