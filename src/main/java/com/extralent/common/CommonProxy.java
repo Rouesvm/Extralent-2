@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -25,7 +26,7 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(Extralent.instance, new GuiHandler());
-        FuelHandler.init();
+        MinecraftForge.EVENT_BUS.register(new FuelHandler());
     }
 
     public void postInit(FMLPostInitializationEvent event) {

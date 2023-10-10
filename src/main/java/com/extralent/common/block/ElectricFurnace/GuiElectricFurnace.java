@@ -1,7 +1,9 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.common.misc.ModMisc;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Collections;
@@ -24,20 +26,19 @@ public class GuiElectricFurnace extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        mc.getTextureManager().bindTexture(TEXTURES);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURES);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-        int progress = furnace.getClientProgress();
-        drawProgressBar(progress);
 
         int energy = furnace.getClientEnergy();
         drawEnergyBar(energy);
-    }
 
-    private void drawProgressBar(int progress) {
+        int progress = furnace.getClientProgress();
         if (progress > 0) {
-            int i = getProgressBarScaled(progress, 26);
-            drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, i + 1, 17);
+            int arrowWidth = 26;
+            int percentage = getProgressBarScaled(progress, arrowWidth);
+
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, percentage + 1, 17);
         }
     }
 

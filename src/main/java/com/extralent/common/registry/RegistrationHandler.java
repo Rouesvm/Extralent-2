@@ -13,8 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegistrationHandler {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        ModItems.registerFuelHandlers();
         ModItems.register(event.getRegistry());
+        ModItems.registerFuelHandlers();
         ModBlocks.registerItemBlocks(event.getRegistry());
     }
     
