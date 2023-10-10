@@ -35,7 +35,7 @@ public class GuiElectricFurnace extends GuiContainer {
         int progress = furnace.getClientProgress();
         if (progress > 0) {
             int arrowWidth = 26;
-            int percentage = getProgressBarScaled(progress, arrowWidth);
+            int percentage = arrowWidth - progress * arrowWidth / TileElectricFurnace.MAX_PROGRESS;
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, percentage + 1, 17);
@@ -49,11 +49,6 @@ public class GuiElectricFurnace extends GuiContainer {
             int color = i % 2 == 0 ? 0xffee1c00 : 0xff590a00;
             drawHorizontalLine(guiLeft + 186, guiLeft + 204, guiTop + 13 + 1 + i, color);
         }
-    }
-
-    private int getProgressBarScaled(int progress, int pixels) {
-        int i = TileElectricFurnace.MAX_PROGRESS;
-        return progress != 0 ? pixels - progress * pixels / i : 0;
     }
 
     @Override
