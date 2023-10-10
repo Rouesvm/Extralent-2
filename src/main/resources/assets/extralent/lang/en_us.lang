@@ -3,3 +3,8 @@ item.extralent.lydrix.name=Lydrix
 
 //Blocks
 tile.extralent.lydrix_block.name=Lydrix Block
+tile.extralent.machine_casing.name=Machine Casing
+tile.extralent.electric_furnace.name=Electric Furnace
+
+//Creative Tab
+itemGroup.Extralent=Extralent
