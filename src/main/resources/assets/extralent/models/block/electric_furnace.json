@@ -2,11 +2,11 @@
   "parent": "block/cube",
   "textures": {
     "particle": "extralent:blocks/electric_furnace_front",
-    "down": "extralent:blocks/electric_furnace_top",
-    "up": "extralent:blocks/electric_furnace_top",
-    "east": "extralent:blocks/electric_furnace_side",
-    "west": "extralent:blocks/electric_furnace_side",
+    "down": "extralent:blocks/machine_casing_top",
+    "up": "extralent:blocks/machine_casing_top",
+    "east": "extralent:blocks/machine_casing_side",
+    "west": "extralent:blocks/machine_casing_side",
     "north": "#front",
-    "south": "extralent:blocks/electric_furnace_side"
+    "south": "extralent:blocks/machine_casing_side"
   }
 }

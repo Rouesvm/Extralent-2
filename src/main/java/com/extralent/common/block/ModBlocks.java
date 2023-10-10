@@ -12,26 +12,30 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
 
-    public static BlockElectricFurnace electricfurnace = new BlockElectricFurnace("electric_furnace");
-    public static GenericBlock blocklydrix = new GenericBlock("lydrix_block", Material.IRON);
+    public static BlockElectricFurnace electricFurnace = new BlockElectricFurnace("electric_furnace");
+    public static GenericBlock blockLydrix = new GenericBlock("lydrix_block", Material.IRON);
+    public static GenericBlock machineCasing = new GenericBlock("machine_casing", Material.IRON);
 
     public static void register(IForgeRegistry<Block> registry) {
         GameRegistry.registerTileEntity(TileElectricFurnace.class,  new ResourceLocation(ModMisc.MODID + "_electric_furnace"));
         registry.registerAll(
-                blocklydrix,
-                electricfurnace
+                blockLydrix,
+                machineCasing,
+                electricFurnace
         );
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                blocklydrix.createItemBlock(),
-                electricfurnace.createItemBlock()
+                blockLydrix.createItemBlock(),
+                machineCasing.createItemBlock(),
+                electricFurnace.createItemBlock()
         );
     }
 
     public static void registerModels() {
-        blocklydrix.registerItemModel(Item.getItemFromBlock(blocklydrix));
-        electricfurnace.registerItemModel(Item.getItemFromBlock(electricfurnace));
+        blockLydrix.registerItemModel(Item.getItemFromBlock(blockLydrix));
+        machineCasing.registerItemModel(Item.getItemFromBlock(machineCasing));
+        electricFurnace.registerItemModel(Item.getItemFromBlock(electricFurnace));
     }
 }

@@ -12,6 +12,6 @@ public class FuelConfig {
 
     static {
         FUEL_DATA.put(ModItems.lydrix, 100);
-        FUEL_DATA.put(Item.getItemFromBlock(ModBlocks.blocklydrix), 60 * 10);
+        FUEL_DATA.put(Item.getItemFromBlock(ModBlocks.blockLydrix), 60 * 10);
     }
 }
