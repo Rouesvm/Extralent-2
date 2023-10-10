@@ -57,7 +57,7 @@ public class GuiElectricFurnace extends GuiContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
 
-        if (isInRect( guiLeft + 184, guiTop + 12, 23, 104, mouseX, mouseY)) {
+        if (isInRect(guiLeft + 184, guiTop + 12, 23, 104, mouseX, mouseY)) {
             drawHoveringText(Collections.singletonList("Energy: " + furnace.getClientEnergy()), mouseX, mouseY, fontRenderer);
         }
     }
