@@ -80,10 +80,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
                     markDirty();
                     return;
                 }
-            } else {
-                progress = 0;
-                markDirty();
-                return;
             }
         }
     }
