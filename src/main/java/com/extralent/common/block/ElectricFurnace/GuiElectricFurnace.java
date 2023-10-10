@@ -26,13 +26,17 @@ public class GuiElectricFurnace extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURES);
+        mc.renderEngine.bindTexture(TEXTURES);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         int energy = furnace.getClientEnergy();
         drawEnergyBar(energy);
 
         int progress = furnace.getClientProgress();
+        drawProgressArrow(progress);
+    }
+
+    private void drawProgressArrow(int progress) {
         if (progress > 0) {
             int arrowWidth = 26;
             int percentage = arrowWidth - progress * arrowWidth / TileElectricFurnace.MAX_PROGRESS;
