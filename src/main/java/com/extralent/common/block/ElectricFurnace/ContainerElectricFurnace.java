@@ -50,15 +50,15 @@ public class ContainerElectricFurnace extends Container implements IEnergyContai
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 10;
-        int y = 26;
+        int x = 48;
+        int y = 6;
 
         int slotIndex = 0;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); x += 18;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); x += 18;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); y += 20; x -= 14;
+        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); y += 20; x += 14;
+        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); y -= 20;
 
-        x = 118;
+        x = 107;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); x += 18;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y)); x += 18;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));

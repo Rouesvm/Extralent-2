@@ -1,7 +1,6 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.common.misc.ModMisc;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -42,16 +41,16 @@ public class GuiElectricFurnace extends GuiContainer {
             int percentage = arrowWidth - progress * arrowWidth / TileElectricFurnace.MAX_PROGRESS;
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            drawTexturedModalRect(guiLeft + 78, guiTop + 25, 1, 153, percentage + 1, 17);
+            drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, percentage + 1, 17);
         }
     }
 
     private void drawEnergyBar(int energy) {
-        drawRect(guiLeft + 184, guiTop + 12, guiLeft + 207, guiTop + 116, 0xff5f5f5f);
-        int percentage = energy * 100 / TileElectricFurnace.MAX_POWER;
+        //drawRect(guiLeft + 9, guiTop + 5, guiLeft + 20, guiTop + 63, 0xffffffff);
+        int percentage = energy * 57 / TileElectricFurnace.MAX_POWER;
         for (int i = 0 ; i < percentage ; i++) {
-            int color = i % 2 == 0 ? 0xffee1c00 : 0xff590a00;
-            drawHorizontalLine(guiLeft + 186, guiLeft + 204, guiTop + 13 + 1 + i, color);
+            int color = i % 2 == 0 ? 0xffee1c00 : 0xffbd1600;
+            drawHorizontalLine(guiLeft + 10, guiLeft + 18, (guiTop + 63 - 1) - i, color);
         }
     }
 
@@ -61,7 +60,7 @@ public class GuiElectricFurnace extends GuiContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
 
-        if (isInRect(guiLeft + 184, guiTop + 12, 23, 104, mouseX, mouseY)) {
+        if (isInRect(guiLeft + 9, guiTop + 5, 11, 59, mouseX, mouseY)) {
             drawHoveringText(Collections.singletonList("Energy: " + furnace.getClientEnergy()), mouseX, mouseY, fontRenderer);
         }
     }
