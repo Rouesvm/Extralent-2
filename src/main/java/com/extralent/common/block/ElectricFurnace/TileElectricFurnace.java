@@ -1,6 +1,7 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.tools.EEnergyStorage;
+import com.extralent.api.tools.IRestorableTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,29 +21,29 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileElectricFurnace extends TileEntity implements ITickable {
+public class TileElectricFurnace extends TileEntity implements ITickable, IRestorableTileEntity {
 
     public static final int INPUT_SLOTS = 3;
     public static final int OUTPUT_SLOTS = 3;
     public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
-    public static final int MAX_PROGRESS = 40;
+    public static final int MAX_PROGRESS = 25;
     public static final int MAX_POWER = 80000;
-    private static final int RF_PER_TICK_INPUT = 100;
-    public static final int RF_PER_TICK = 25;
+    private static final int RF_PER_TICK_INPUT = 200;
+    public static final int RF_PER_TICK = 50;
 
     private int progress = 0;
-    private FurnaceState state = FurnaceState.OFF;
+    private FurnaceState state = FurnaceState.NOPOWER;
 
     private int clientProgress = -1;
     private int clientEnergy = -1;
-
 
     @Override
     public void update() {
         if (!world.isRemote) {
             if (energyStorage.getEnergyStored() < RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
+                progress = 0;
                 return;
             }
             if (progress > 0) {
@@ -79,6 +80,10 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
                     markDirty();
                     return;
                 }
+            } else {
+                progress = 0;
+                markDirty();
+                return;
             }
         }
     }
@@ -209,6 +214,18 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
     }
 
     @Override
+    public void readRestorableFromNBT(NBTTagCompound compound) {
+        if (compound.hasKey("itemsIn")) {
+            inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
+        }
+        if (compound.hasKey("itemsOut")) {
+            outputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsOut"));
+        }
+        progress = compound.getInteger("progress");
+        energyStorage.setEnergy(compound.getInteger("energy"));
+    }
+
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setTag("itemsIn", inputHandler.serializeNBT());
@@ -216,6 +233,14 @@ public class TileElectricFurnace extends TileEntity implements ITickable {
         compound.setInteger("progress", progress);
         compound.setInteger("energy", energyStorage.getEnergyStored());
         return compound;
+    }
+
+    @Override
+    public void writeRestorableToNBT(NBTTagCompound compound) {
+        compound.setTag("itemsIn", inputHandler.serializeNBT());
+        compound.setTag("itemsOut", outputHandler.serializeNBT());
+        compound.setInteger("progress", progress);
+        compound.setInteger("energy", energyStorage.getEnergyStored());
     }
 
     public boolean canInteractWith(EntityPlayer playerIn) {
