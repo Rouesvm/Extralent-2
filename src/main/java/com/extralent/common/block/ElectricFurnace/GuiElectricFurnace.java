@@ -57,9 +57,12 @@ public class GuiElectricFurnace extends GuiContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
 
-        // This is startX - endX and startY - endY in that order.
-        if (mouseX > guiLeft + 184 && mouseX < guiLeft + 207 && mouseY > guiTop + 12 && mouseY < guiTop + 116) {
+        if (isInRect( guiLeft + 184, guiTop + 12, 23, 104, mouseX, mouseY)) {
             drawHoveringText(Collections.singletonList("Energy: " + furnace.getClientEnergy()), mouseX, mouseY, fontRenderer);
         }
+    }
+
+    public static boolean isInRect(int x, int y, int xSize, int ySize, int mouseX, int mouseY){
+        return ((mouseX >= x && mouseX <= x+xSize) && (mouseY >= y && mouseY <= y+ySize));
     }
 }
