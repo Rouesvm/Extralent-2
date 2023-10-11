@@ -51,7 +51,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
                 }
                 markDirty();
             } else {
-                setState(FurnaceState.OFF);
                 startSmelt();
             }
         }
@@ -72,12 +71,14 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), true)) {
+                    setState(FurnaceState.ON);
                     progress = ElectricFurnaceConfig.MAX_PROGRESS;
                     markDirty();
                     return;
                 }
             }
         }
+        setState(FurnaceState.OFF);
     }
 
     private void attemptSmelt() {
@@ -194,14 +195,8 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey("itemsIn")) {
-            inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
-        }
-        if (compound.hasKey("itemsOut")) {
-            outputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsOut"));
-        }
-        progress = compound.getInteger("progress");
-        energyStorage.setEnergy(compound.getInteger("energy"));
+        readRestorableFromNBT(compound);
+        state = FurnaceState.VALUES[compound.getInteger("state")];
     }
 
     @Override
@@ -219,10 +214,8 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setTag("itemsIn", inputHandler.serializeNBT());
-        compound.setTag("itemsOut", outputHandler.serializeNBT());
-        compound.setInteger("progress", progress);
-        compound.setInteger("energy", energyStorage.getEnergyStored());
+        writeRestorableToNBT(compound);
+        compound.setInteger("state", state.ordinal());
         return compound;
     }
 
