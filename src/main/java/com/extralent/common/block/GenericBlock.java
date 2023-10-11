@@ -33,13 +33,19 @@ public class GenericBlock extends Block {
 
     protected String name;
 
-    public GenericBlock(String name, Material material){
+    public GenericBlock(String name, Material material, String toolClass, int level) {
         super(material);
         this.name = name;
 
+        this.setHarvestLevel(toolClass, level);
         this.setCreativeTab(Extralent.creativeTab);
         this.setRegistryName(new ResourceLocation(ModMisc.MODID, name));
         this.setTranslationKey(ModMisc.MODID + "." + name);
+    }
+
+    @Override
+    public Block setHardness(float hardness) {
+        return super.setHardness(hardness);
     }
 
     private static final Pattern COMPILE = Pattern.compile("@", Pattern.LITERAL);

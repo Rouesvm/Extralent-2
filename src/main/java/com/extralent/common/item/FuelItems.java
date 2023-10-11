@@ -1,13 +1,12 @@
-package com.extralent.common.config;
+package com.extralent.common.item;
 
 import com.extralent.common.block.ModBlocks;
-import com.extralent.common.item.ModItems;
 import net.minecraft.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FuelConfig {
+public class FuelItems {
     public static final Map<Item, Integer> FUEL_DATA = new HashMap<>();
 
     static {

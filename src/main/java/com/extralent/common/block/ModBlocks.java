@@ -12,9 +12,12 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
 
+    public static GenericBlock blockLydrix =
+            (GenericBlock) new GenericBlock("lydrix_block", Material.IRON, "pickaxe", 2).setHardness(3);
+    public static GenericBlock machineCasing =
+            (GenericBlock) new GenericBlock("machine_casing", Material.IRON, "pickaxe", 2).setHardness(4);
+
     public static BlockElectricFurnace electricFurnace = new BlockElectricFurnace("electric_furnace");
-    public static GenericBlock blockLydrix = new GenericBlock("lydrix_block", Material.IRON);
-    public static GenericBlock machineCasing = new GenericBlock("machine_casing", Material.IRON);
 
     public static void register(IForgeRegistry<Block> registry) {
         registry.registerAll(

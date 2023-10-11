@@ -1,5 +1,6 @@
 package com.extralent.common.block.ElectricFurnace;
 
+import com.extralent.common.config.ElectricFurnaceConfig;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,7 +39,7 @@ public class GuiElectricFurnace extends GuiContainer {
     private void drawProgressArrow(int progress) {
         if (progress > 0) {
             int arrowWidth = 26;
-            int percentage = arrowWidth - progress * arrowWidth / TileElectricFurnace.MAX_PROGRESS;
+            int percentage = arrowWidth - progress * arrowWidth / ElectricFurnaceConfig.MAX_PROGRESS;
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, percentage + 1, 17);
@@ -47,7 +48,7 @@ public class GuiElectricFurnace extends GuiContainer {
 
     private void drawEnergyBar(int energy) {
         //drawRect(guiLeft + 9, guiTop + 5, guiLeft + 20, guiTop + 63, 0xffffffff);
-        int percentage = energy * 57 / TileElectricFurnace.MAX_POWER;
+        int percentage = energy * 57 / ElectricFurnaceConfig.MAX_POWER;
         for (int i = 0 ; i < percentage ; i++) {
             int color = i % 2 == 0 ? 0xffee1c00 : 0xffbd1600;
             drawHorizontalLine(guiLeft + 10, guiLeft + 18, (guiTop + 63 - 1) - i, color);

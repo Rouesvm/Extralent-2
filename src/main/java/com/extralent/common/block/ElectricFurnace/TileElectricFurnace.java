@@ -2,6 +2,7 @@ package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.tools.EEnergyStorage;
 import com.extralent.api.tools.IRestorableTileEntity;
+import com.extralent.common.config.ElectricFurnaceConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,11 +28,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     public static final int OUTPUT_SLOTS = 3;
     public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
-    public static final int MAX_PROGRESS = 25;
-    public static final int MAX_POWER = 80000;
-    private static final int RF_PER_TICK_INPUT = 200;
-    public static final int RF_PER_TICK = 50;
-
     private int progress = 0;
     private FurnaceState state = FurnaceState.NOPOWER;
 
@@ -41,14 +37,14 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (energyStorage.getEnergyStored() < RF_PER_TICK) {
+            if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
                 progress = 0;
                 return;
             }
             if (progress > 0) {
                 setState(FurnaceState.ON);
-                energyStorage.consumePower(RF_PER_TICK);
+                energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK);
                 progress--;
                 if (progress == 0) {
                     attemptSmelt();
@@ -76,7 +72,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), true)) {
-                    progress = MAX_PROGRESS;
+                    progress = ElectricFurnaceConfig.MAX_PROGRESS;
                     markDirty();
                     return;
                 }
@@ -191,7 +187,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
 
     //------------------------------------------------------------------------
 
-    private EEnergyStorage energyStorage = new EEnergyStorage(MAX_POWER, RF_PER_TICK_INPUT);
+    private EEnergyStorage energyStorage = new EEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
 
     //------------------------------------------------------------------------
 

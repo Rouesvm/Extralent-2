@@ -35,9 +35,10 @@ public class BlockElectricFurnace extends GenericBlock implements ITileEntityPro
     public static final PropertyEnum<FurnaceState> STATE = PropertyEnum.create("state", FurnaceState.class);
 
     public BlockElectricFurnace(String name) {
-        super(name, Material.IRON);
+        super(name, Material.IRON, "pickaxe", 3);
         this.name = name;
 
+        this.setHardness(4);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 

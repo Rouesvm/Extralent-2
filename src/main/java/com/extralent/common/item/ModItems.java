@@ -1,7 +1,6 @@
 package com.extralent.common.item;
 
 
-import com.extralent.common.config.FuelConfig;
 import com.extralent.common.core.handler.FuelHandler;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -25,7 +24,7 @@ public class ModItems {
     }
 
     public static void registerFuelHandlers() {
-        for (Map.Entry<Item, Integer> entry : FuelConfig.FUEL_DATA.entrySet()) {
+        for (Map.Entry<Item, Integer> entry : FuelItems.FUEL_DATA.entrySet()) {
             FuelHandler.registerFuelItem(entry.getKey(), entry.getValue());
         }
     }
