@@ -1,23 +1,31 @@
 {
-    "result": {
-        "item": "extralent:lydrix"
-    },
+    "type": "minecraft:crafting_shaped",
     "pattern": [
-        "xlx",
-        "lcl",
-        "xlx"
+        "RLR",
+        "LCL",
+        "RLR"
     ],
-    "type": "forge:ore_shaped",
     "key": {
-        "x": {
+        "R": {
             "item": "minecraft:redstone"
         },
-        "l": {
+        "L": {
             "item": "minecraft:dye",
             "data": 4
         },
-        "c": {
-            "item": "minecraft:coal"
-        }
+        "C": [
+            {
+                "item": "minecraft:coal",
+                "data": 0
+            },
+            {
+                "item": "minecraft:coal",
+                "data": 1
+            }
+        ]
+    },
+    "result": {
+        "item": "extralent:lydrix",
+        "count": 1
     }
 }
