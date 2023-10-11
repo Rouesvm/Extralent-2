@@ -15,8 +15,6 @@ public class ModItems {
         registry.registerAll(
                 lydrix
         );
-
-        registerFuelHandlers();
     }
 
     public static void registerModels() {

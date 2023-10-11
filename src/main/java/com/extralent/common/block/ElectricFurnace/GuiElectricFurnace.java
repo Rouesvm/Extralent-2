@@ -30,9 +30,8 @@ public class GuiElectricFurnace extends GuiContainer {
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         int energy = furnace.getClientEnergy();
-        drawEnergyBar(energy);
-
         int progress = furnace.getClientProgress();
+        drawEnergyBar(energy);
         drawProgressArrow(progress);
     }
 
@@ -40,8 +39,6 @@ public class GuiElectricFurnace extends GuiContainer {
         if (progress > 0) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, progress + 1, 17);
-        } else {
-            drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, 1, 17);
         }
     }
 
