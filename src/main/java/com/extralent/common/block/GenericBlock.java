@@ -2,11 +2,11 @@ package com.extralent.common.block;
 
 import com.extralent.Extralent;
 import com.extralent.api.tools.IRestorableTileEntity;
-import com.extralent.common.block.ElectricFurnace.TileElectricFurnace;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -39,8 +40,8 @@ public class GenericBlock extends Block {
         this.setTranslationKey(ModMisc.MODID + "." + name);
     }
 
-    public void registerItemModel(Item itemBlock) {
-        Extralent.proxy.registerItemRenderer(itemBlock, 0, name);
+    public void registerItemModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
     public Item createItemBlock() {
@@ -51,7 +52,7 @@ public class GenericBlock extends Block {
 
     protected void addInformationLocalized(List<String> tooltip, String key, Object... parameters) {
         String translated = I18n.format(key, parameters);
-        translated = COMPILE.matcher(translated).replaceAll("\u00a7");
+        translated = COMPILE.matcher(translated).replaceAll("§");
         Collections.addAll(tooltip, StringUtils.split(translated, "\n"));
     }
 

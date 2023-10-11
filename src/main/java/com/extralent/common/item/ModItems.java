@@ -3,19 +3,21 @@ package com.extralent.common.item;
 
 import com.extralent.common.config.FuelConfig;
 import com.extralent.common.core.handler.FuelHandler;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Map;
 
 public class ModItems {
-    public static ItemBase lydrix = new ItemBase("lydrix");
+
+    public static GenericItem lydrix = new GenericItem("lydrix");
 
     public static void register(IForgeRegistry<Item> registry) {
         registry.registerAll(
                 lydrix
         );
+
+        registerFuelHandlers();
     }
 
     public static void registerModels() {

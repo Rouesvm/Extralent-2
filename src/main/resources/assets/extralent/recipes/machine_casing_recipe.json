@@ -2,20 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "RRR",
-    "LCL",
-    "ELE"
+    "ICI",
+    "III"
   ],
   "key": {
-    "L": {
-      "item": "extralent:lydrix"
+    "R": {
+      "item": "minecraft:redstone"
     },
     "C": {
       "item": "extralent:lydrix_block"
     },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "E": {
+    "I": {
       "item": "minecraft:iron_ingot"
     }
   },

@@ -2,15 +2,16 @@ package com.extralent.common.item;
 
 import com.extralent.Extralent;
 import com.extralent.common.misc.ModMisc;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 
-public class ItemBase extends Item {
+public class GenericItem extends Item {
 
     protected String name;
 
-    public ItemBase(String name) {
+    public GenericItem(String name) {
         this.name = name;
 
         this.setCreativeTab(Extralent.creativeTab);
@@ -19,6 +20,6 @@ public class ItemBase extends Item {
     }
 
     public void registerItemModel() {
-        Extralent.proxy.registerItemRenderer(this, 0, name);
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 }

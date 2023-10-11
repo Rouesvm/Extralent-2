@@ -17,7 +17,6 @@ public class ModBlocks {
     public static GenericBlock machineCasing = new GenericBlock("machine_casing", Material.IRON);
 
     public static void register(IForgeRegistry<Block> registry) {
-        GameRegistry.registerTileEntity(TileElectricFurnace.class,  new ResourceLocation(ModMisc.MODID + "_electric_furnace"));
         registry.registerAll(
                 blockLydrix,
                 machineCasing,
@@ -31,11 +30,17 @@ public class ModBlocks {
                 machineCasing.createItemBlock(),
                 electricFurnace.createItemBlock()
         );
+
+        registerTileEntities();
     }
 
     public static void registerModels() {
-        blockLydrix.registerItemModel(Item.getItemFromBlock(blockLydrix));
-        machineCasing.registerItemModel(Item.getItemFromBlock(machineCasing));
-        electricFurnace.registerItemModel(Item.getItemFromBlock(electricFurnace));
+        blockLydrix.registerItemModel();
+        machineCasing.registerItemModel();
+        electricFurnace.registerItemModel();
+    }
+
+    private static void registerTileEntities() {
+        GameRegistry.registerTileEntity(TileElectricFurnace.class, new ResourceLocation(ModMisc.MODID + "_electric_furnace"));
     }
 }

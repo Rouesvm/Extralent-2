@@ -2,6 +2,7 @@ package com.extralent.common;
 
 import com.extralent.Extralent;
 import com.extralent.api.network.Messages;
+import com.extralent.common.block.ModBlocks;
 import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;
 import com.extralent.common.item.ModItems;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
+
     public void preInit(FMLPreInitializationEvent event) {
         Messages.registerMessages("extralent");
     }
@@ -33,14 +35,14 @@ public class CommonProxy {
     }
 
     @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+        ModItems.register(event.getRegistry());
+        ModBlocks.registerItemBlocks(event.getRegistry());
     }
 
     @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event) {
-    }
-
-    public void registerItemRenderer(Item itemBlock, int i, String name) {
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        ModBlocks.register(event.getRegistry());
     }
 
     public ListenableFuture<Object> addScheduledTaskClient(Runnable runnableToSchedule) {
