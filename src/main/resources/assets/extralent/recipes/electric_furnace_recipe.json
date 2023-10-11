@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RRR",
+    "LCL",
+    "RLR"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "L": {
+      "item": "extralent:lydrix"
+    },
+    "C": {
+      "item": "extralent:machine_casing"
+    }
+  },
+  "result": {
+    "item": "extralent:electric_furnace",
+    "count": 1
+  }
+}
