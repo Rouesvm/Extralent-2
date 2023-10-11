@@ -38,11 +38,10 @@ public class GuiElectricFurnace extends GuiContainer {
 
     private void drawProgressArrow(int progress) {
         if (progress > 0) {
-            int arrowWidth = 26;
-            int percentage = arrowWidth - progress * arrowWidth / ElectricFurnaceConfig.MAX_PROGRESS;
-
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, percentage + 1, 17);
+            drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, progress + 1, 17);
+        } else {
+            drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, 1, 17);
         }
     }
 

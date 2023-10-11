@@ -1,8 +1,9 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.network.Messages;
-import com.extralent.api.network.PacketSyncPower;
-import com.extralent.api.tools.IEnergyContainer;
+import com.extralent.api.network.PacketSyncMachineState;
+import com.extralent.api.tools.IMachineStateContainer;
+import com.extralent.common.config.ElectricFurnaceConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -14,7 +15,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerElectricFurnace extends Container implements IEnergyContainer {
+public class ContainerElectricFurnace extends Container implements IMachineStateContainer {
 
     private final TileElectricFurnace tileEntity;
 
@@ -107,9 +108,9 @@ public class ContainerElectricFurnace extends Container implements IEnergyContai
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {
                         EntityPlayerMP player = (EntityPlayerMP) listener;
-
-                        listener.sendWindowProperty(this, PROGRESS_ID, tileEntity.getProgress());
-                        Messages.INSTANCE.sendTo(new PacketSyncPower(tileEntity.getEnergy()), player);
+                        int arrowWidth = 26;
+                        int percentage = arrowWidth - tileEntity.getClientProgress() * arrowWidth / ElectricFurnaceConfig.MAX_PROGRESS;
+                        Messages.INSTANCE.sendTo(new PacketSyncMachineState(tileEntity.getEnergy(), percentage), player);
                     }
                 }
             }
@@ -117,14 +118,8 @@ public class ContainerElectricFurnace extends Container implements IEnergyContai
     }
 
     @Override
-    public void updateProgressBar(int id, int data) {
-        if (id == PROGRESS_ID) {
-            tileEntity.setClientProgress(data);
-        }
-    }
-
-    @Override
-    public void syncPower(int energy) {
+    public void sync(int energy, int progress) {
         tileEntity.setClientEnergy(energy);
+        tileEntity.setClientProgress(progress);
     }
 }
