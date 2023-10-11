@@ -99,18 +99,18 @@ public class ContainerElectricFurnace extends Container implements IEnergyContai
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        if (tileEntity.getProgress() != tileEntity.getClientProgress()) {
-            tileEntity.setClientProgress(tileEntity.getProgress());
-            for (IContainerListener listener : listeners) {
-                listener.sendWindowProperty(this, PROGRESS_ID, tileEntity.getProgress());
-            }
-        }
-        if (tileEntity.getEnergy() != tileEntity.getClientEnergy()) {
-            tileEntity.setClientEnergy(tileEntity.getEnergy());
-            for (IContainerListener listener : listeners) {
-                if (listener instanceof EntityPlayerMP) {
-                    EntityPlayerMP player = (EntityPlayerMP) listener;
-                    Messages.INSTANCE.sendTo(new PacketSyncPower(tileEntity.getEnergy()), player);
+        if (!tileEntity.getWorld().isRemote) {
+            if (tileEntity.getEnergy() != tileEntity.getClientEnergy() || tileEntity.getProgress() != tileEntity.getClientProgress()) {
+                tileEntity.setClientEnergy(tileEntity.getEnergy());
+                tileEntity.setClientProgress(tileEntity.getProgress());
+
+                for (IContainerListener listener : listeners) {
+                    if (listener instanceof EntityPlayerMP) {
+                        EntityPlayerMP player = (EntityPlayerMP) listener;
+
+                        listener.sendWindowProperty(this, PROGRESS_ID, tileEntity.getProgress());
+                        Messages.INSTANCE.sendTo(new PacketSyncPower(tileEntity.getEnergy()), player);
+                    }
                 }
             }
         }

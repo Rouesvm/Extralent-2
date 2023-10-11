@@ -1,10 +1,10 @@
-//Items
+#PARSE_ESCAPES
 item.extralent.lydrix.name=Lydrix
 
-//Blocks
 tile.extralent.lydrix_block.name=Lydrix Block
 tile.extralent.machine_casing.name=Machine Casing
 tile.extralent.electric_furnace.name=Electric Furnace
 
-//Creative Tab
 itemGroup.Extralent=Extralent
+
+message.extralent.fast_furnace=\@aEnergy: %d\n\@aItems: %d -> %d\n\

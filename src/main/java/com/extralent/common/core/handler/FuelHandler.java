@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class FuelHandler {
 
     private static final Map<Item, Integer> fuelItemMap = new HashMap<>();
 
-    public static void registerFuelItem(Item fuelItem, int burnTimeSeconds) {
+    public static void registerFuelItem(@Nonnull Item fuelItem, int burnTimeSeconds) {
         fuelItemMap.put(fuelItem, burnTimeSeconds);
     }
 

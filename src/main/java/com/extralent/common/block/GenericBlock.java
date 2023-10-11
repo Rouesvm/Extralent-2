@@ -21,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -40,19 +42,11 @@ public class GenericBlock extends Block {
         this.setTranslationKey(ModMisc.MODID + "." + name);
     }
 
-    public void registerItemModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
-    public Item createItemBlock() {
-        return new ItemBlock(this).setRegistryName(getRegistryName());
-    }
-
     private static final Pattern COMPILE = Pattern.compile("@", Pattern.LITERAL);
 
     protected void addInformationLocalized(List<String> tooltip, String key, Object... parameters) {
         String translated = I18n.format(key, parameters);
-        translated = COMPILE.matcher(translated).replaceAll("§");
+        translated = COMPILE.matcher(translated).replaceAll("\u00a7");
         Collections.addAll(tooltip, StringUtils.split(translated, "\n"));
     }
 
@@ -100,5 +94,14 @@ public class GenericBlock extends Block {
                 ((IRestorableTileEntity) tileEntity).readRestorableFromNBT(tagCompound);
             }
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerItemModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
+
+    public Item createItemBlock() {
+        return new ItemBlock(this).setRegistryName(getRegistryName());
     }
 }

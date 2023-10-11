@@ -167,7 +167,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
 
     // This item handler will hold our three input slots
     private ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
-
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
