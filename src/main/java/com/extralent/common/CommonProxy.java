@@ -28,11 +28,12 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(Extralent.instance, new GuiHandler());
-        MinecraftForge.EVENT_BUS.register(new FuelHandler());
+        MinecraftForge.EVENT_BUS.register(FuelHandler.instance);
+
+        ModItems.registerFuelHandlers();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        ModItems.registerFuelHandlers();
     }
 
     @SubscribeEvent

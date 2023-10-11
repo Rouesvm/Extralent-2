@@ -9,12 +9,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FuelHandler {
+    public static final FuelHandler instance = new FuelHandler();
 
     private static final Map<Item, Integer> fuelItemMap = new HashMap<>();
 
     public static void registerFuelItem(@Nonnull Item fuelItem, int burnTimeSeconds) {
         fuelItemMap.put(fuelItem, burnTimeSeconds);
     }
+
+    private FuelHandler() {
+    }
+
+    ;
 
     @SubscribeEvent
     public void onFurnaceFuelBurnTimeEvent(FurnaceFuelBurnTimeEvent event) {
