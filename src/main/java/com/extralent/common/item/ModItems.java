@@ -16,15 +16,18 @@ public class ModItems {
             return 2 * 60 * 20;
         }
     };
+    public static GenericItem rydrixIngot = new GenericItem("rydrix_ingot");
 
     public static void register(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                lydrix
+                lydrix,
+                rydrixIngot
         );
     }
 
     public static void registerModels() {
         lydrix.registerItemModel();
+        rydrixIngot.registerItemModel();
     }
 
     public static void registerFuelHandlers() {
