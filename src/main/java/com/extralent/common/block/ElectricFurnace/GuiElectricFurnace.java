@@ -12,6 +12,8 @@ public class GuiElectricFurnace extends GuiContainer {
     public static final int WIDTH = 180;
     public static final int HEIGHT = 152;
 
+    public static final int arrowWidth = 26 + 1;
+
     private static final ResourceLocation TEXTURES = new ResourceLocation(ModMisc.MODID, "textures/gui/electric_furnace_gui.png");
     private final TileElectricFurnace furnace;
 
@@ -36,9 +38,14 @@ public class GuiElectricFurnace extends GuiContainer {
     }
 
     private void drawProgressArrow(int progress) {
-        if (progress > 0) {
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            drawTexturedModalRect(guiLeft + 71, guiTop + 25, 1, 153, progress + 1, 17);
+        int arrowX = 71;
+        int arrowY = 25;
+
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        if (progress < arrowWidth) {
+            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, progress + 1, 17);
+        } else {
+            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, 0, 17);
         }
     }
 

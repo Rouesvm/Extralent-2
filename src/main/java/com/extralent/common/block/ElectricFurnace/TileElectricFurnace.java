@@ -39,7 +39,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         if (!world.isRemote) {
             if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
-                progress = ElectricFurnaceConfig.MAX_PROGRESS;
                 return;
             }
             if (progress > 0) {

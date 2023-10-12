@@ -108,8 +108,7 @@ public class ContainerElectricFurnace extends Container implements IMachineState
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {
                         EntityPlayerMP player = (EntityPlayerMP) listener;
-                        int arrowWidth = 26;
-                        int percentage = arrowWidth - tileEntity.getClientProgress() * arrowWidth / ElectricFurnaceConfig.MAX_PROGRESS;
+                        int percentage = GuiElectricFurnace.arrowWidth - tileEntity.getClientProgress() * GuiElectricFurnace.arrowWidth / ElectricFurnaceConfig.MAX_PROGRESS;
                         Messages.INSTANCE.sendTo(new PacketSyncMachineState(tileEntity.getEnergy(), percentage), player);
                     }
                 }
