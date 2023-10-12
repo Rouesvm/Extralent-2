@@ -1,6 +1,6 @@
 #PARSE_ESCAPES
 item.extralent.lydrix.name=Lydrix
-item.extralent.ingot_rydrix.name=Rydrix Ingot
+item.extralent.rydrix_ingot.name=Rydrix Ingot
 
 tile.extralent.lydrix_block.name=Lydrix Block
 tile.extralent.rydrix_ore.name=Rydrix Ore
