@@ -1,6 +1,7 @@
 package com.extralent.common.block;
 
 import com.extralent.Extralent;
+import com.extralent.api.tools.IGuiTile;
 import com.extralent.api.tools.IRestorableTileEntity;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.block.Block;
@@ -15,6 +16,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -100,6 +103,20 @@ public class GenericBlock extends Block {
                 ((IRestorableTileEntity) tileEntity).readRestorableFromNBT(tagCompound);
             }
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        // Only execute on the server
+        if (world.isRemote) {
+            return true;
+        }
+        TileEntity te = world.getTileEntity(pos);
+        if (!(te instanceof IGuiTile)) {
+            return false;
+        }
+        player.openGui(Extralent.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+        return true;
     }
 
     @SideOnly(Side.CLIENT)

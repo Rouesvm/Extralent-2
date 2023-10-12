@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "RRR",
+    "RLR",
     "LCL",
-    "RLR"
+    "XXX"
   ],
   "key": {
     "R": {
@@ -14,6 +14,9 @@
     },
     "C": {
       "item": "extralent:machine_casing"
+    },
+    "X": {
+      "item": "extralent:rydrix_ingot"
     }
   },
   "result": {

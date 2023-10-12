@@ -1,10 +1,13 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.tools.EEnergyStorage;
+import com.extralent.api.tools.IGuiTile;
 import com.extralent.api.tools.IRestorableTileEntity;
 import com.extralent.common.config.ElectricFurnaceConfig;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +25,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileElectricFurnace extends TileEntity implements ITickable, IRestorableTileEntity {
+public class TileElectricFurnace extends TileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 3;
     public static final int OUTPUT_SLOTS = 3;
@@ -229,6 +232,16 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     public boolean canInteractWith(EntityPlayer playerIn) {
         // If we are too far away from this tile entity you cannot use it
         return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    }
+
+    @Override
+    public Container createContainer(EntityPlayer player) {
+        return new ContainerElectricFurnace(player.inventory, this);
+    }
+
+    @Override
+    public GuiContainer createGui(EntityPlayer player) {
+        return new GuiElectricFurnace(this, new ContainerElectricFurnace(player.inventory, this));
     }
 
     @Override

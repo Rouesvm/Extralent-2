@@ -1,8 +1,6 @@
 package com.extralent.common.core.handler;
 
-import com.extralent.common.block.ElectricFurnace.ContainerElectricFurnace;
-import com.extralent.common.block.ElectricFurnace.GuiElectricFurnace;
-import com.extralent.common.block.ElectricFurnace.TileElectricFurnace;
+import com.extralent.api.tools.IGuiTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -17,9 +15,9 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileElectricFurnace) {
-            return new ContainerElectricFurnace(player.inventory, (TileElectricFurnace) te);
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity instanceof IGuiTile) {
+            return ((IGuiTile) tileEntity).createContainer(player);
         }
         return null;
     }
@@ -29,9 +27,8 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof TileElectricFurnace) {
-            TileElectricFurnace containerTileEntity = (TileElectricFurnace) tileEntity;
-            return new GuiElectricFurnace(containerTileEntity, new ContainerElectricFurnace(player.inventory, containerTileEntity));
+        if (tileEntity instanceof IGuiTile) {
+            return ((IGuiTile) tileEntity).createGui(player);
         }
         return null;
     }
