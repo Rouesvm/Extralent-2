@@ -31,10 +31,10 @@ public class ModBlocks {
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.registerAll(
-                blockLydrix.createItemBlock(),
-                machineCasing.createItemBlock(),
-                electricFurnace.createItemBlock(),
-                rydrixOre.createItemBlock()
+                blockLydrix.getItemBlock(),
+                machineCasing.getItemBlock(),
+                electricFurnace.getItemBlock(),
+                rydrixOre.getItemBlock()
         );
 
         registerTileEntities();

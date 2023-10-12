@@ -6,6 +6,7 @@ import com.extralent.common.block.ModBlocks;
 import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;
 import com.extralent.common.item.ModItems;
+import com.extralent.common.worldgen.OreGenerator;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,12 +19,14 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
         Messages.registerMessages("extralent");
+        GameRegistry.registerWorldGenerator(OreGenerator.instance, 5);
     }
 
     public void init(FMLInitializationEvent event) {

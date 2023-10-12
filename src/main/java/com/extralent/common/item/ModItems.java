@@ -3,13 +3,19 @@ package com.extralent.common.item;
 
 import com.extralent.common.core.handler.FuelHandler;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Map;
 
 public class ModItems {
 
-    public static GenericItem lydrix = new GenericItem("lydrix");
+    public static GenericItem lydrix = new GenericItem("lydrix") {
+        @Override
+        public int getItemBurnTime(ItemStack itemStack) {
+            return 2 * 60 * 20;
+        }
+    };
 
     public static void register(IForgeRegistry<Item> registry) {
         registry.registerAll(

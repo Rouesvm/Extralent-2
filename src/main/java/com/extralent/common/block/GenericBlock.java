@@ -107,7 +107,7 @@ public class GenericBlock extends Block {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
-    public Item createItemBlock() {
+    public Item getItemBlock() {
         return new ItemBlock(this).setRegistryName(getRegistryName());
     }
 }
