@@ -2,6 +2,8 @@
 item.extralent.lydrix.name=Lydrix
 
 tile.extralent.lydrix_block.name=Lydrix Block
+tile.extralent.rydrix_ore.name=Rydrix Ore
+
 tile.extralent.machine_casing.name=Machine Casing
 tile.extralent.electric_furnace.name=Electric Furnace
 

@@ -13,17 +13,19 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModBlocks {
 
     public static GenericBlock blockLydrix =
-            (GenericBlock) new GenericBlock("lydrix_block", Material.IRON, "pickaxe", 2).setHardness(3);
+            (GenericBlock) new GenericBlock("lydrix_block", Material.IRON, "pickaxe", 2).setHardness(3.0f);
     public static GenericBlock machineCasing =
-            (GenericBlock) new GenericBlock("machine_casing", Material.IRON, "pickaxe", 2).setHardness(4);
+            (GenericBlock) new GenericBlock("machine_casing", Material.IRON, "pickaxe", 2).setHardness(3.0f);
 
     public static BlockElectricFurnace electricFurnace = new BlockElectricFurnace("electric_furnace");
+    public static BlockRydrixOre rydrixOre = new BlockRydrixOre("rydrix_ore");
 
     public static void register(IForgeRegistry<Block> registry) {
         registry.registerAll(
                 blockLydrix,
                 machineCasing,
-                electricFurnace
+                electricFurnace,
+                rydrixOre
         );
     }
 
@@ -31,7 +33,8 @@ public class ModBlocks {
         registry.registerAll(
                 blockLydrix.createItemBlock(),
                 machineCasing.createItemBlock(),
-                electricFurnace.createItemBlock()
+                electricFurnace.createItemBlock(),
+                rydrixOre.createItemBlock()
         );
 
         registerTileEntities();
@@ -41,6 +44,7 @@ public class ModBlocks {
         blockLydrix.registerItemModel();
         machineCasing.registerItemModel();
         electricFurnace.registerItemModel();
+        rydrixOre.registerItemModel();
     }
 
     private static void registerTileEntities() {

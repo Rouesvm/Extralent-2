@@ -38,7 +38,7 @@ public class BlockElectricFurnace extends GenericBlock implements ITileEntityPro
         super(name, Material.IRON, "pickaxe", 3);
         this.name = name;
 
-        this.setHardness(4);
+        this.setHardness(3.0f);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 

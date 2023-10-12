@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "end": "extralent:blocks/machine_casing_top",
-    "side": "extralent:blocks/machine_casing_side"
+    "end": "extralent:blocks/machine_top",
+    "side": "extralent:blocks/machine_side"
   }
 }

@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(
@@ -20,7 +19,8 @@ import org.apache.logging.log4j.Logger;
 )
 public class Extralent {
 
-	public static final Logger LOGGER = LogManager.getLogger(ModMisc.MODID);
+	@SidedProxy(clientSide = ModMisc.PROXY_CLIENT, serverSide = ModMisc.PROXY_SERVER)
+	public static CommonProxy proxy;
 
 	public static CreativeTabs creativeTab = new CreativeTabs("Extralent") {
 		@Override
@@ -32,13 +32,11 @@ public class Extralent {
 	@Mod.Instance(ModMisc.MODID)
 	public static Extralent instance;
 
-	@SidedProxy(clientSide = ModMisc.PROXY_CLIENT, serverSide = ModMisc.PROXY_SERVER)
-	public static CommonProxy proxy;
-
 	public static Logger logger;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
 		proxy.preInit(event);
 	}
 

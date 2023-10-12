@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ],
+    "oretype": {
+      "overworld": {
+        "model": "cube_all",
+        "textures": {
+          "all": "extralent:blocks/ore_overworld_rydrix"
+        }
+      }
+    }
+  }
+}
