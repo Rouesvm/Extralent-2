@@ -1,6 +1,6 @@
 package com.extralent.common.block.FuseMachine;
 
-import com.extralent.common.config.ElectricFurnaceConfig;
+import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,11 +39,11 @@ public class GuiFuseMachine extends GuiContainer {
 
     private void drawProgressArrow(int progress) {
         int arrowX = 65;
-        int arrowY = 12;
+        int arrowY = 3;
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         if (progress < arrowWidth) {
-            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, progress + 1, 17);
+            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, progress + 1, 19);
         } else {
             drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, 0, 19);
         }
@@ -51,7 +51,7 @@ public class GuiFuseMachine extends GuiContainer {
 
     private void drawEnergyBar(int energy) {
         //drawRect(guiLeft + 9, guiTop + 5, guiLeft + 20, guiTop + 63, 0xffffffff);
-        int percentage = energy * 57 / ElectricFurnaceConfig.MAX_POWER;
+        int percentage = energy * 57 / FuseMachineConfig.MAX_POWER;
         for (int i = 0; i < percentage; i++) {
             int color = i % 2 == 0 ? 0xffee1c00 : 0xffbd1600;
             drawHorizontalLine(guiLeft + 10, guiLeft + 18, (guiTop + 63 - 1) - i, color);

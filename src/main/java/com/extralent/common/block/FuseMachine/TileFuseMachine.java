@@ -3,13 +3,14 @@ package com.extralent.common.block.FuseMachine;
 import com.extralent.api.tools.EEnergyStorage;
 import com.extralent.api.tools.IGuiTile;
 import com.extralent.api.tools.IRestorableTileEntity;
-import com.extralent.common.config.ElectricFurnaceConfig;
+import com.extralent.api.tools.RecipeAPI;
+import com.extralent.common.config.FuseMachineConfig;
+import com.extralent.common.recipe.RecipeHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -40,20 +41,20 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
+            if (energyStorage.getEnergyStored() < FuseMachineConfig.RF_PER_TICK) {
                 setState(MachineState.NOPOWER);
                 return;
             }
             if (progress > 0) {
                 setState(MachineState.ON);
-                energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK);
+                energyStorage.consumePower(FuseMachineConfig.RF_PER_TICK);
                 progress--;
                 if (progress == 0) {
-                    attemptSmelt();
+                    attemptFusing();
                 }
                 markDirty();
             } else {
-                startSmelt();
+                startFusing();
             }
         }
     }
@@ -68,31 +69,48 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
         return false;
     }
 
-    private void startSmelt() {
-        for (int i = 0; i < INPUT_SLOTS; i++) {
-            ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
-            if (!result.isEmpty()) {
-                if (insertOutput(result.copy(), true)) {
-                    setState(MachineState.ON);
-                    progress = ElectricFurnaceConfig.MAX_PROGRESS;
-                    markDirty();
-                    return;
-                }
-            }
+    private void startFusing() {
+        ItemStack input1 = inputHandler.getStackInSlot(0);
+        ItemStack input2 = inputHandler.getStackInSlot(1);
+
+        if (input1.isEmpty() || input2.isEmpty()) {
+            setState(MachineState.OFF);
+            return;
         }
-        setState(MachineState.OFF);
+
+        RecipeAPI recipe = RecipeHandler.getRecipeForInput(input1, input2);
+        if (recipe == null) {
+            setState(MachineState.OFF);
+            return;
+        }
+
+        ItemStack result = recipe.getOutput();
+        if (insertOutput(result.copy(), true)) {
+            setState(MachineState.ON);
+            progress = FuseMachineConfig.MAX_PROGRESS;
+            markDirty();
+        }
     }
 
-    private void attemptSmelt() {
-        for (int i = 0; i < INPUT_SLOTS; i++) {
-            ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
-            if (!result.isEmpty()) {
-                // This copy is very important!(
-                if (insertOutput(result.copy(), false)) {
-                    inputHandler.extractItem(i, 1, false);
-                    break;
-                }
-            }
+    private void attemptFusing() {
+        ItemStack input1 = inputHandler.getStackInSlot(0);
+        ItemStack input2 = inputHandler.getStackInSlot(1);
+
+        if (input1.isEmpty() || input2.isEmpty()) {
+            setState(MachineState.OFF);
+            return;
+        }
+
+        RecipeAPI recipe = RecipeHandler.getRecipeForInput(input1, input2);
+        if (recipe == null) {
+            setState(MachineState.OFF);
+            return;
+        }
+
+        ItemStack result = recipe.getOutput();
+        if (insertOutput(result.copy(), false)) {
+            inputHandler.extractItem(0, 1, false);
+            inputHandler.extractItem(1, 1, false);
         }
     }
 
@@ -168,8 +186,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     private ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
-            return !result.isEmpty();
+            return slot < 2;
         }
 
         @Override
@@ -190,7 +207,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
 
     //------------------------------------------------------------------------
 
-    private EEnergyStorage energyStorage = new EEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
+    private EEnergyStorage energyStorage = new EEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
 
     //------------------------------------------------------------------------
 

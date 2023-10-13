@@ -3,7 +3,7 @@ package com.extralent.common.block.FuseMachine;
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.IMachineStateContainer;
-import com.extralent.common.config.ElectricFurnaceConfig;
+import com.extralent.common.config.FuseMachineConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -51,16 +51,16 @@ public class ContainerFuseMachine extends Container implements IMachineStateCont
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 53;
+        int x = 54;
         int y = 23;
 
         int slotIndex = 0;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
         y += 20;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
-        y += 20;
 
-        x = 116;
+        y = 33;
+        x = 115;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
     }
 
@@ -107,7 +107,7 @@ public class ContainerFuseMachine extends Container implements IMachineStateCont
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {
                         EntityPlayerMP player = (EntityPlayerMP) listener;
-                        int percentage = GuiFuseMachine.arrowWidth - tileEntity.getClientProgress() * GuiFuseMachine.arrowWidth / ElectricFurnaceConfig.MAX_PROGRESS;
+                        int percentage = GuiFuseMachine.arrowWidth - tileEntity.getClientProgress() * GuiFuseMachine.arrowWidth / FuseMachineConfig.MAX_PROGRESS;
                         Messages.INSTANCE.sendTo(new PacketSyncMachineState(tileEntity.getEnergy(), percentage), player);
                     }
                 }

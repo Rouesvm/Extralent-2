@@ -1,7 +1,5 @@
 package com.extralent.common.block.FuseMachine;
 
-import com.extralent.common.block.ElectricFurnace.FurnaceState;
-import com.extralent.common.block.ElectricFurnace.TileElectricFurnace;
 import com.extralent.common.block.GenericBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -31,7 +29,7 @@ public class BlockFuseMachine extends GenericBlock implements ITileEntityProvide
     protected String name;
 
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
-    public static final PropertyEnum<FurnaceState> STATE = PropertyEnum.create("state", FurnaceState.class);
+    public static final PropertyEnum<MachineState> STATE = PropertyEnum.create("state", MachineState.class);
 
     public BlockFuseMachine(String name) {
         super(name, Material.IRON, "pickaxe", 3);
@@ -70,14 +68,14 @@ public class BlockFuseMachine extends GenericBlock implements ITileEntityProvide
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileElectricFurnace();
+        return new TileFuseMachine();
     }
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity tileEntity = world instanceof ChunkCache ? ((ChunkCache) world).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : world.getTileEntity(pos);
-        if (tileEntity instanceof TileElectricFurnace) {
-            return state.withProperty(STATE, ((TileElectricFurnace) tileEntity).getState());
+        if (tileEntity instanceof TileFuseMachine) {
+            return state.withProperty(STATE, ((TileFuseMachine) tileEntity).getState());
         }
         return super.getActualState(state, world, pos);
     }

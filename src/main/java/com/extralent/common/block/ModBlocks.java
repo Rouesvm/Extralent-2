@@ -3,6 +3,7 @@ package com.extralent.common.block;
 import com.extralent.common.block.ElectricFurnace.BlockElectricFurnace;
 import com.extralent.common.block.ElectricFurnace.TileElectricFurnace;
 import com.extralent.common.block.FuseMachine.BlockFuseMachine;
+import com.extralent.common.block.FuseMachine.TileFuseMachine;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -28,6 +29,7 @@ public class ModBlocks {
                 blockLydrix,
                 machineCasing,
                 electricFurnace,
+                fuseMachine,
                 rydrixOre
         );
     }
@@ -37,6 +39,7 @@ public class ModBlocks {
                 blockLydrix.getItemBlock(),
                 machineCasing.getItemBlock(),
                 electricFurnace.getItemBlock(),
+                fuseMachine.getItemBlock(),
                 rydrixOre.getItemBlock()
         );
 
@@ -47,10 +50,12 @@ public class ModBlocks {
         blockLydrix.registerItemModel();
         machineCasing.registerItemModel();
         electricFurnace.registerItemModel();
+        fuseMachine.registerItemModel();
         rydrixOre.registerItemModel();
     }
 
     private static void registerTileEntities() {
         GameRegistry.registerTileEntity(TileElectricFurnace.class, new ResourceLocation(ModMisc.MODID + "_electric_furnace"));
+        GameRegistry.registerTileEntity(TileFuseMachine.class, new ResourceLocation(ModMisc.MODID + "_fuse_machine"));
     }
 }

@@ -6,6 +6,7 @@ import com.extralent.common.block.ModBlocks;
 import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;
 import com.extralent.common.item.ModItems;
+import com.extralent.common.recipe.Recipes;
 import com.extralent.common.worldgen.OreGenerator;
 import com.extralent.common.worldgen.WorldTickHandler;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -39,6 +40,7 @@ public class CommonProxy {
         MinecraftForge.EVENT_BUS.register(WorldTickHandler.instance);
         MinecraftForge.EVENT_BUS.register(FuelHandler.instance);
 
+        Recipes.registerRecipes();
         ModItems.registerFuelHandlers();
     }
 
