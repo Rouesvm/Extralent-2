@@ -70,21 +70,21 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     }
 
     private void startFusing() {
-        ItemStack input1 = inputHandler.getStackInSlot(0);
-        ItemStack input2 = inputHandler.getStackInSlot(1);
+        ItemStack input0 = inputHandler.getStackInSlot(0);
+        ItemStack input1 = inputHandler.getStackInSlot(1);
 
-        if (input1.isEmpty() || input2.isEmpty()) {
+        if (input0.isEmpty() || input1.isEmpty()) {
             setState(MachineState.OFF);
             return;
         }
 
-        RecipeAPI recipe = RecipeHandler.getRecipeForInput(input1, input2);
+        RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
         if (recipe == null) {
             setState(MachineState.OFF);
             return;
         }
 
-        ItemStack result = recipe.getOutput();
+        ItemStack result = recipe.getCraftingResult(inputHandler);
         if (insertOutput(result.copy(), true)) {
             setState(MachineState.ON);
             progress = FuseMachineConfig.MAX_PROGRESS;
@@ -93,21 +93,21 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     }
 
     private void attemptFusing() {
-        ItemStack input1 = inputHandler.getStackInSlot(0);
-        ItemStack input2 = inputHandler.getStackInSlot(1);
+        ItemStack input0 = inputHandler.getStackInSlot(0);
+        ItemStack input1 = inputHandler.getStackInSlot(1);
 
-        if (input1.isEmpty() || input2.isEmpty()) {
+        if (input0.isEmpty() || input1.isEmpty()) {
             setState(MachineState.OFF);
             return;
         }
 
-        RecipeAPI recipe = RecipeHandler.getRecipeForInput(input1, input2);
+        RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
         if (recipe == null) {
             setState(MachineState.OFF);
             return;
         }
 
-        ItemStack result = recipe.getOutput();
+        ItemStack result = recipe.getCraftingResult(inputHandler);
         if (insertOutput(result.copy(), false)) {
             inputHandler.extractItem(0, 1, false);
             inputHandler.extractItem(1, 1, false);

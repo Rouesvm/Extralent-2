@@ -1,23 +1,43 @@
 package com.extralent.api.tools;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nullable;
 
 public class RecipeAPI {
+    private final ItemStack input0;
     private final ItemStack input1;
-    private final ItemStack input2;
     private final ItemStack output;
 
-    public RecipeAPI(ItemStack input1, ItemStack input2, ItemStack output) {
+    public RecipeAPI(ItemStack input0, ItemStack input1, ItemStack output) {
+        this.input0 = input0;
         this.input1 = input1;
-        this.input2 = input2;
         this.output = output;
     }
 
-    public boolean matches(ItemStack input1, ItemStack input2) {
-        return ItemStack.areItemsEqual(this.input1, input1) && ItemStack.areItemsEqual(this.input2, input2);
+    public boolean matches(ItemStackHandler inv, @Nullable World worldin) {
+        boolean foundInput0 = false;
+        boolean foundInput1 = false;
+
+        for (int i = 0; i < inv.getSlots(); i++) {
+            ItemStack stack = inv.getStackInSlot(i);
+            if (ItemStack.areItemsEqual(stack, input0)) {
+                foundInput0 = true;
+            } else if (ItemStack.areItemsEqual(stack, input1)) {
+                foundInput1 = true;
+            }
+        }
+
+        return foundInput0 && foundInput1;
     }
 
-    public ItemStack getOutput() {
-        return output;
+    public ItemStack getCraftingResult(ItemStackHandler inv) {
+        if (matches(inv, null)) {
+            return output.copy();
+        } else {
+            return ItemStack.EMPTY;
+        }
     }
 }

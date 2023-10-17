@@ -1,7 +1,7 @@
 package com.extralent.common.recipe;
 
 import com.extralent.api.tools.RecipeAPI;
-import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,9 @@ public class RecipeHandler {
         recipes.add(recipe);
     }
 
-    public static RecipeAPI getRecipeForInput(ItemStack input1, ItemStack input2) {
+    public static RecipeAPI getRecipeForInput(ItemStackHandler inv) {
         for (RecipeAPI recipe : recipes) {
-            if (recipe.matches(input1, input2)) {
+            if (recipe.matches(inv, null)) {
                 return recipe;
             }
         }
