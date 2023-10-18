@@ -34,10 +34,6 @@ public class RecipeAPI {
     }
 
     public ItemStack getCraftingResult(ItemStackHandler inv) {
-        if (matches(inv, null)) {
-            return output.copy();
-        } else {
-            return ItemStack.EMPTY;
-        }
+        return matches(inv, null) ? output.copy() : ItemStack.EMPTY;
     }
 }
