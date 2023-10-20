@@ -1,6 +1,6 @@
 package com.extralent.common.block.FuseMachine;
 
-import com.extralent.api.tools.EEnergyStorage;
+import com.extralent.api.tools.ETEnergyStorage;
 import com.extralent.api.tools.IGuiTile;
 import com.extralent.api.tools.IRestorableTileEntity;
 import com.extralent.api.tools.RecipeAPI;
@@ -207,7 +207,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
 
     //------------------------------------------------------------------------
 
-    private EEnergyStorage energyStorage = new EEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
+    private ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
 
     //------------------------------------------------------------------------
 

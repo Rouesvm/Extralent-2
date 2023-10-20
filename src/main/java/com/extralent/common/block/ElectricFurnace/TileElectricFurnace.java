@@ -1,6 +1,6 @@
 package com.extralent.common.block.ElectricFurnace;
 
-import com.extralent.api.tools.EEnergyStorage;
+import com.extralent.api.tools.ETEnergyStorage;
 import com.extralent.api.tools.IGuiTile;
 import com.extralent.api.tools.IRestorableTileEntity;
 import com.extralent.common.config.ElectricFurnaceConfig;
@@ -190,7 +190,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
 
     //------------------------------------------------------------------------
 
-    private EEnergyStorage energyStorage = new EEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
+    private ETEnergyStorage energyStorage = new ETEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
 
     //------------------------------------------------------------------------
 
