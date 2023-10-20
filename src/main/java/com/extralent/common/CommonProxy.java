@@ -57,7 +57,7 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        ModBlocks.register(event.getRegistry());
+        ModBlocks.registerBlocks(event.getRegistry());
     }
 
     public ListenableFuture<Object> addScheduledTaskClient(Runnable runnableToSchedule) {

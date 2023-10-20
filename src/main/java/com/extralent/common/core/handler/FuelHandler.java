@@ -20,8 +20,6 @@ public class FuelHandler {
     private FuelHandler() {
     }
 
-    ;
-
     @SubscribeEvent
     public void onFurnaceFuelBurnTimeEvent(FurnaceFuelBurnTimeEvent event) {
         int burnTime = fuelItemMap.getOrDefault(event.getItemStack().getItem(), 0);

@@ -24,7 +24,7 @@ public class ModBlocks {
 
     public static BlockRydrixOre rydrixOre = new BlockRydrixOre("rydrix_ore");
 
-    public static void register(IForgeRegistry<Block> registry) {
+    public static void registerBlocks(IForgeRegistry<Block> registry) {
         registry.registerAll(
                 blockLydrix,
                 machineCasing,
