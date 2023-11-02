@@ -1,6 +1,7 @@
 package com.extralent.common.recipe;
 
 import com.extralent.api.tools.RecipeAPI;
+import com.extralent.common.recipe.recipeTypes.FusingRecipes;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
@@ -20,5 +21,9 @@ public class RecipeHandler {
             }
         }
         return null;
+    }
+
+    public static void registerRecipes() {
+        FusingRecipes.registerRecipes();
     }
 }
