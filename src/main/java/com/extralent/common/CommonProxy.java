@@ -45,7 +45,6 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        GameRegistry.addSmelting(ModBlocks.rydrixOre, new ItemStack(ModItems.rydrixIngot, 1), 2.0f);
         OreDictionary.registerOre("oreRydrix", ModBlocks.rydrixOre);
     }
 

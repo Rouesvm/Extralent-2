@@ -8,14 +8,14 @@ public class FuseMachineConfig {
 
     @Config.Comment(value = "Number of ticks for one fusing operation")
     @Config.RangeInt(min = 1)
-    public static int MAX_PROGRESS = 100;
+    public static int MAX_PROGRESS = 200;
 
     @Config.Comment(value = "Maximum power for the fuse machine")
-    public static int MAX_POWER = 125000;
+    public static int MAX_POWER = 200000;
 
     @Config.Comment(value = "How much RF per tick the fuse machine can receive")
-    public static int RF_PER_TICK_INPUT = 300;
+    public static int RF_PER_TICK_INPUT = 2000;
 
     @Config.Comment(value = "How much RF per tick the fuse machine use while fusing")
-    public static int RF_PER_TICK = 125;
+    public static int RF_PER_TICK = 300;
 }

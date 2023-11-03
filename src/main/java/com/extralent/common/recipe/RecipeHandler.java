@@ -1,7 +1,11 @@
 package com.extralent.common.recipe;
 
 import com.extralent.api.tools.RecipeAPI;
+import com.extralent.common.block.ModBlocks;
+import com.extralent.common.item.ModItems;
 import com.extralent.common.recipe.recipeTypes.FusingRecipes;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
@@ -25,5 +29,6 @@ public class RecipeHandler {
 
     public static void registerRecipes() {
         FusingRecipes.registerRecipes();
+        GameRegistry.addSmelting(ModBlocks.rydrixOre, new ItemStack(ModItems.rydrixIngot, 1), 2.0f);
     }
 }
