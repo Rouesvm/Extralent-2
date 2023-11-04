@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class GenericBlock extends Block {
@@ -121,10 +122,10 @@ public class GenericBlock extends Block {
 
     @SideOnly(Side.CLIENT)
     public void registerItemModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory"));
     }
 
     public Item getItemBlock() {
-        return new ItemBlock(this).setRegistryName(getRegistryName());
+        return new ItemBlock(this).setRegistryName(Objects.requireNonNull(getRegistryName()));
     }
 }

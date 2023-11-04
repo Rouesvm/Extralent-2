@@ -23,7 +23,7 @@ public class RecipeHandler {
         }
 
         for (RecipeAPI recipe : recipes) {
-            if (recipe.matches(inv, null)) {
+            if (recipe.matches(inv)) {
                 recipeCache.put(inv, recipe);
                 return recipe;
             }

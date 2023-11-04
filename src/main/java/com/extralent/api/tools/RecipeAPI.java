@@ -2,10 +2,11 @@ package com.extralent.api.tools;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class RecipeAPI {
     private final ItemStack output;
@@ -16,17 +17,23 @@ public class RecipeAPI {
         this.output = output;
     }
 
-    public boolean matches(ItemStackHandler inv, @Nullable World worldin) {
+    public boolean matches(ItemStackHandler inv) {
+        List<ItemStack> remainingInputs = new ArrayList<>(this.inputs);
         for (int i = 0; i < inv.getSlots(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
-            if (ItemStack.areItemStacksEqual(stack, inputs.get(i))) {
-                return false;
+            Iterator<ItemStack> iterator = remainingInputs.iterator();
+            while (iterator.hasNext()) {
+                ItemStack input = iterator.next();
+                if (ItemStack.areItemsEqual(stack, input)) {
+                    iterator.remove();
+                    break;
+                }
             }
         }
-        return true;
+        return remainingInputs.isEmpty();
     }
 
     public ItemStack getCraftingResult(ItemStackHandler inv) {
-        return matches(inv, null) ? output.copy() : ItemStack.EMPTY;
+        return matches(inv) ? this.output.copy() : ItemStack.EMPTY;
     }
 }

@@ -8,9 +8,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
-public class FusingRecipes {
+public class FusingRecipes extends RecipeHandler {
     public static void registerFusingRecipes() {
-        RecipeHandler.addRecipe(Lists.newArrayList(ModItems.rydrixIngot, Items.REDSTONE), ModItems.lydrix);
-        RecipeHandler.addRecipe(Lists.newArrayList(ModBlocks.blockLydrix.getItemBlock(), Item.getItemFromBlock(Blocks.REDSTONE_BLOCK)), ModBlocks.machineCasing.getItemBlock());
+        addRecipe(Lists.newArrayList(ModItems.rydrixIngot, Items.REDSTONE), ModItems.lydrix);
+        addRecipe(Lists.newArrayList(Item.getItemFromBlock(ModBlocks.blockLydrix), Item.getItemFromBlock(Blocks.REDSTONE_BLOCK)),
+                Item.getItemFromBlock(ModBlocks.machineCasing)
+        );
     }
 }
