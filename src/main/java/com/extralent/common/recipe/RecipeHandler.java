@@ -10,10 +10,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RecipeHandler {
@@ -36,11 +33,17 @@ public class RecipeHandler {
         return null;
     }
 
-    public static void addRecipe(List<Item> input, ItemStack output) {
+    public static void addRecipe(List<Item> input, Item output) {
         NonNullList<ItemStack> inputs = input.parallelStream()
                 .map(ItemStack::new)
                 .collect(Collectors.toCollection(NonNullList::create));
-        RecipeHandler.addRecipe(new RecipeAPI(inputs, output));
+        addRecipe(new RecipeAPI(inputs, new ItemStack(output)));
+    }
+
+    public static void addRecipe(Item input, Item output) {
+        NonNullList<ItemStack> inputs = NonNullList.create();
+        inputs.add(new ItemStack(input));
+        addRecipe(new RecipeAPI(inputs, new ItemStack(output)));
     }
 
     public static void addRecipe(RecipeAPI recipe) {

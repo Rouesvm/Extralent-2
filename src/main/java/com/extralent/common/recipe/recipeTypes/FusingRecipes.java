@@ -4,10 +4,9 @@ import com.extralent.common.item.ModItems;
 import com.extralent.common.recipe.RecipeHandler;
 import com.google.common.collect.Lists;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 
 public class FusingRecipes {
     public static void registerFusingRecipes() {
-        RecipeHandler.addRecipe(Lists.newArrayList(ModItems.rydrixIngot, Items.REDSTONE), new ItemStack(ModItems.lydrix));
+        RecipeHandler.addRecipe(Lists.newArrayList(ModItems.rydrixIngot, Items.REDSTONE), ModItems.lydrix);
     }
 }
