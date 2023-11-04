@@ -4,31 +4,51 @@ import com.extralent.api.tools.RecipeAPI;
 import com.extralent.common.block.ModBlocks;
 import com.extralent.common.item.ModItems;
 import com.extralent.common.recipe.recipeTypes.FusingRecipes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RecipeHandler {
     private static final List<RecipeAPI> recipes = new ArrayList<>();
+    private static final Map<ItemStackHandler, RecipeAPI> recipeCache = new HashMap<>();
+
+    public static RecipeAPI getRecipeForInput(ItemStackHandler inv) {
+        if (recipeCache.containsKey(inv)) {
+            return recipeCache.get(inv);
+        }
+
+        for (RecipeAPI recipe : recipes) {
+            if (recipe.matches(inv, null)) {
+                recipeCache.put(inv, recipe);
+                return recipe;
+            }
+        }
+
+        recipeCache.put(inv, null);
+        return null;
+    }
+
+    public static void addRecipe(List<Item> input, ItemStack output) {
+        NonNullList<ItemStack> inputs = input.parallelStream()
+                .map(ItemStack::new)
+                .collect(Collectors.toCollection(NonNullList::create));
+        RecipeHandler.addRecipe(new RecipeAPI(inputs, output));
+    }
 
     public static void addRecipe(RecipeAPI recipe) {
         recipes.add(recipe);
     }
 
-    public static RecipeAPI getRecipeForInput(ItemStackHandler inv) {
-        for (RecipeAPI recipe : recipes) {
-            if (recipe.matches(inv, null)) {
-                return recipe;
-            }
-        }
-        return null;
-    }
-
     public static void registerRecipes() {
-        FusingRecipes.registerRecipes();
+        FusingRecipes.registerFusingRecipes();
         GameRegistry.addSmelting(ModBlocks.rydrixOre, new ItemStack(ModItems.rydrixIngot, 1), 2.0f);
     }
 }
