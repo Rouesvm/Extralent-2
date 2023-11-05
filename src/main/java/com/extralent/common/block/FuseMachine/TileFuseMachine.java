@@ -59,7 +59,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
                 progress--;
                 if (progress == 0) {
                     attemptFusing();
-                    markDirty();
                 }
             } else {
                 startFusing();
@@ -102,6 +101,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
         if (insertOutput(result.copy(), false)) {
             inputHandler.extractItem(0, 1, false);
             inputHandler.extractItem(1, 1, false);
+            markDirty();
         }
     }
 

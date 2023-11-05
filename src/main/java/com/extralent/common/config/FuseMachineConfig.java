@@ -17,5 +17,5 @@ public class FuseMachineConfig {
     public static int RF_PER_TICK_INPUT = 2000;
 
     @Config.Comment(value = "How much RF per tick the fuse machine use while fusing")
-    public static int RF_PER_TICK = 300;
+    public static int RF_PER_TICK = 30;
 }

@@ -53,7 +53,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
                 progress--;
                 if (progress == 0) {
                     attemptSmelt();
-                    markDirty();
                 }
             } else {
                 startSmelt();
@@ -79,6 +78,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
                     setState(FurnaceState.ON);
                     progress = ElectricFurnaceConfig.MAX_PROGRESS;
                     world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    markDirty();
                     return;
                 }
             }
@@ -92,6 +92,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), false)) {
                     inputHandler.extractItem(i, 1, false);
+                    markDirty();
                     break;
                 }
             }
