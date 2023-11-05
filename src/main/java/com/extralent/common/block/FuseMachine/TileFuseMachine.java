@@ -43,6 +43,12 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
         if (!world.isRemote) {
             if (energyStorage.getEnergyStored() < FuseMachineConfig.RF_PER_TICK) {
                 setState(MachineState.NOPOWER);
+                setProgress(0);
+                return;
+            }
+            if (inputHandler.getStackInSlot(0).isEmpty() && inputHandler.getStackInSlot(1).isEmpty()) {
+                setState(MachineState.OFF);
+                setProgress(0);
                 return;
             }
             if (progress > 0) {
@@ -51,8 +57,8 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
                 progress--;
                 if (progress == 0) {
                     attemptFusing();
+                    markDirty();
                 }
-                markDirty();
             } else {
                 startFusing();
             }
@@ -70,14 +76,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     }
 
     private void startFusing() {
-        ItemStack input0 = inputHandler.getStackInSlot(0);
-        ItemStack input1 = inputHandler.getStackInSlot(1);
-
-        if (input0.isEmpty() || input1.isEmpty()) {
-            setState(MachineState.OFF);
-            return;
-        }
-
         RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
         if (recipe == null) {
             setState(MachineState.OFF);
@@ -93,14 +91,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     }
 
     private void attemptFusing() {
-        ItemStack input0 = inputHandler.getStackInSlot(0);
-        ItemStack input1 = inputHandler.getStackInSlot(1);
-
-        if (input0.isEmpty() || input1.isEmpty()) {
-            setState(MachineState.OFF);
-            return;
-        }
-
         RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
         if (recipe == null) {
             setState(MachineState.OFF);

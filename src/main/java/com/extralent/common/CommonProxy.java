@@ -2,6 +2,7 @@ package com.extralent.common;
 
 import com.extralent.Extralent;
 import com.extralent.api.network.Messages;
+import com.extralent.client.sounds.SoundListener;
 import com.extralent.common.block.ModBlocks;
 import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;
@@ -32,6 +33,7 @@ public class CommonProxy {
         Messages.registerMessages("extralent");
         GameRegistry.registerWorldGenerator(OreGenerator.instance, 5);
 
+        MinecraftForge.EVENT_BUS.register(new SoundListener());
         MinecraftForge.EVENT_BUS.register(OreGenerator.instance);
     }
 

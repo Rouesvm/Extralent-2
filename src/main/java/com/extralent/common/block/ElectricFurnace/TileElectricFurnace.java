@@ -7,6 +7,7 @@ import com.extralent.common.config.ElectricFurnaceConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -16,6 +17,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -42,6 +44,12 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         if (!world.isRemote) {
             if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
+                setProgress(0);
+                return;
+            }
+            if (inputHandler.getStackInSlot(0).isEmpty() || inputHandler.getStackInSlot(1).isEmpty()) {
+                setState(FurnaceState.OFF);
+                setProgress(0);
                 return;
             }
             if (progress > 0) {
@@ -50,8 +58,8 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
                 progress--;
                 if (progress == 0) {
                     attemptSmelt();
+                    markDirty();
                 }
-                markDirty();
             } else {
                 startSmelt();
             }
@@ -71,13 +79,14 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     private void startSmelt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
-            if (!result.isEmpty()) {
-                if (insertOutput(result.copy(), true)) {
-                    setState(FurnaceState.ON);
-                    progress = ElectricFurnaceConfig.MAX_PROGRESS;
-                    markDirty();
-                    return;
-                }
+            if (result.isEmpty()) {
+                return;
+            }
+            if (insertOutput(result.copy(), true)) {
+                setState(FurnaceState.ON);
+                progress = ElectricFurnaceConfig.MAX_PROGRESS;
+                world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                return;
             }
         }
         setState(FurnaceState.OFF);
@@ -86,12 +95,12 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     private void attemptSmelt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
-            if (!result.isEmpty()) {
-                // This copy is very important!(
-                if (insertOutput(result.copy(), false)) {
-                    inputHandler.extractItem(i, 1, false);
-                    break;
-                }
+            if (result.isEmpty()) {
+                return;
+            }
+            if (insertOutput(result.copy(), false)) {
+                inputHandler.extractItem(i, 1, false);
+                break;
             }
         }
     }
@@ -165,7 +174,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     //------------------------------------------------------------------------
 
     // This item handler will hold our three input slots
-    private ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
+    private final ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
@@ -179,18 +188,23 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     };
 
     // This item handler will hold our three output slots
-    private ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
+    private final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
         @Override
         protected void onContentsChanged(int slot){
             TileElectricFurnace.this.markDirty();
         }
+
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return false;
+        }
     };
 
-    private CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler, outputHandler);
+    private final CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler, outputHandler);
 
     //------------------------------------------------------------------------
 
-    private ETEnergyStorage energyStorage = new ETEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
+    private final ETEnergyStorage energyStorage = new ETEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
 
     //------------------------------------------------------------------------
 
