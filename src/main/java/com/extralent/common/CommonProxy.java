@@ -32,13 +32,13 @@ public class CommonProxy {
         Messages.registerMessages("extralent");
         GameRegistry.registerWorldGenerator(OreGenerator.instance, 5);
 
-        MinecraftForge.EVENT_BUS.register(SoundHandler.instance);
         MinecraftForge.EVENT_BUS.register(OreGenerator.instance);
     }
 
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(Extralent.instance, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(WorldTickHandler.instance);
+        MinecraftForge.EVENT_BUS.register(SoundHandler.instance);
         MinecraftForge.EVENT_BUS.register(FuelHandler.instance);
 
         RecipeHandler.registerRecipes();
