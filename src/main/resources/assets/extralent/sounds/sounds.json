@@ -1,0 +1,10 @@
+{
+  "fuse": {
+    "category" : "block",
+    "sounds": [{
+        "name": "extralent:fuse",
+        "stream": false
+      }
+    ]
+  }
+}
