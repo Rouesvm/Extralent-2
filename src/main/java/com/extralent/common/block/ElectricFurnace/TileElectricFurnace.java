@@ -47,11 +47,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
                 setProgress(0);
                 return;
             }
-            if (inputHandler.getStackInSlot(0).isEmpty() || inputHandler.getStackInSlot(1).isEmpty()) {
-                setState(FurnaceState.OFF);
-                setProgress(0);
-                return;
-            }
             if (progress > 0) {
                 setState(FurnaceState.ON);
                 energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK);
@@ -79,14 +74,13 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     private void startSmelt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
-            if (result.isEmpty()) {
-                return;
-            }
-            if (insertOutput(result.copy(), true)) {
-                setState(FurnaceState.ON);
-                progress = ElectricFurnaceConfig.MAX_PROGRESS;
-                world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                return;
+            if (!result.isEmpty()) {
+                if (insertOutput(result.copy(), true)) {
+                    setState(FurnaceState.ON);
+                    progress = ElectricFurnaceConfig.MAX_PROGRESS;
+                    world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    return;
+                }
             }
         }
         setState(FurnaceState.OFF);
@@ -95,12 +89,11 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     private void attemptSmelt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
-            if (result.isEmpty()) {
-                return;
-            }
-            if (insertOutput(result.copy(), false)) {
-                inputHandler.extractItem(i, 1, false);
-                break;
+            if (!result.isEmpty()) {
+                if (insertOutput(result.copy(), false)) {
+                    inputHandler.extractItem(i, 1, false);
+                    break;
+                }
             }
         }
     }
@@ -190,13 +183,13 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     // This item handler will hold our three output slots
     private final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
         @Override
-        protected void onContentsChanged(int slot){
-            TileElectricFurnace.this.markDirty();
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return false;
         }
 
         @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return false;
+        protected void onContentsChanged(int slot){
+            TileElectricFurnace.this.markDirty();
         }
     };
 

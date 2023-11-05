@@ -4,6 +4,7 @@ import com.extralent.api.tools.ETEnergyStorage;
 import com.extralent.api.tools.IGuiTile;
 import com.extralent.api.tools.IRestorableTileEntity;
 import com.extralent.api.tools.RecipeAPI;
+import com.extralent.client.sounds.SoundHandler;
 import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.recipe.RecipeHandler;
 import net.minecraft.block.state.IBlockState;
@@ -17,6 +18,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -46,7 +48,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
                 setProgress(0);
                 return;
             }
-            if (inputHandler.getStackInSlot(0).isEmpty() && inputHandler.getStackInSlot(1).isEmpty()) {
+            if (inputHandler.getStackInSlot(0).isEmpty() | inputHandler.getStackInSlot(1).isEmpty()) {
                 setState(MachineState.OFF);
                 setProgress(0);
                 return;
@@ -81,11 +83,11 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
             setState(MachineState.OFF);
             return;
         }
-
         ItemStack result = recipe.getCraftingResult(inputHandler);
         if (insertOutput(result.copy(), true)) {
             setState(MachineState.ON);
             progress = FuseMachineConfig.MAX_PROGRESS;
+            world.playSound(null, pos, SoundHandler.FUSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             markDirty();
         }
     }
@@ -96,7 +98,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
             setState(MachineState.OFF);
             return;
         }
-
         ItemStack result = recipe.getCraftingResult(inputHandler);
         if (insertOutput(result.copy(), false)) {
             inputHandler.extractItem(0, 1, false);
@@ -173,7 +174,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     //------------------------------------------------------------------------
 
     // This item handler will hold our three input slots
-    private ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
+    private final ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             return slot < 2;
@@ -186,18 +187,23 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
     };
 
     // This item handler will hold our three output slots
-    private ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
+    private final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return false;
+        }
+
         @Override
         protected void onContentsChanged(int slot) {
             TileFuseMachine.this.markDirty();
         }
     };
 
-    private CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler, outputHandler);
+    private final CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler, outputHandler);
 
     //------------------------------------------------------------------------
 
-    private ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
+    private final ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
 
     //------------------------------------------------------------------------
 

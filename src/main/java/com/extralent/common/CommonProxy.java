@@ -2,7 +2,7 @@ package com.extralent.common;
 
 import com.extralent.Extralent;
 import com.extralent.api.network.Messages;
-import com.extralent.client.sounds.SoundListener;
+import com.extralent.client.sounds.SoundHandler;
 import com.extralent.common.block.ModBlocks;
 import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;
@@ -14,7 +14,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -33,7 +32,7 @@ public class CommonProxy {
         Messages.registerMessages("extralent");
         GameRegistry.registerWorldGenerator(OreGenerator.instance, 5);
 
-        MinecraftForge.EVENT_BUS.register(new SoundListener());
+        MinecraftForge.EVENT_BUS.register(SoundHandler.instance);
         MinecraftForge.EVENT_BUS.register(OreGenerator.instance);
     }
 
