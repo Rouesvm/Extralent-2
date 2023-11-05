@@ -38,7 +38,6 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(Extralent.instance, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(WorldTickHandler.instance);
-        MinecraftForge.EVENT_BUS.register(SoundHandler.instance);
         MinecraftForge.EVENT_BUS.register(FuelHandler.instance);
 
         RecipeHandler.registerRecipes();

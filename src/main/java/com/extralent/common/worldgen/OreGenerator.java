@@ -81,7 +81,7 @@ public class OreGenerator implements IWorldGenerator {
             boolean generated = OregenConfig.RETROGEN && !tag.hasKey("generated");
             if (generated) {
                 if (OregenConfig.VERBOSE) {
-                    Extralent.logger.log(Level.DEBUG, "Queuing Retrogen for chunk: " + coord.toString() + ".");
+                    Extralent.logger.log(Level.DEBUG, "Queuing Retrogen for chunk: " + coord + ".");
                 }
                 regen = true;
             }
