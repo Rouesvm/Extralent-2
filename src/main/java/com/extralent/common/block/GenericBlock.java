@@ -1,8 +1,8 @@
 package com.extralent.common.block;
 
 import com.extralent.Extralent;
-import com.extralent.api.tools.IGuiTile;
-import com.extralent.api.tools.IRestorableTileEntity;
+import com.extralent.api.tools.Interfaces.IGuiTile;
+import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;

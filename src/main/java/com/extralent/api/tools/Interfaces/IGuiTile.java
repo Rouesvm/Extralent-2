@@ -1,4 +1,4 @@
-package com.extralent.api.tools;
+package com.extralent.api.tools.Interfaces;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;

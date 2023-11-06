@@ -2,7 +2,7 @@ package com.extralent.common.block.FuseMachine;
 
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
-import com.extralent.api.tools.IMachineStateContainer;
+import com.extralent.api.tools.Interfaces.IMachineStateContainer;
 import com.extralent.common.config.FuseMachineConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

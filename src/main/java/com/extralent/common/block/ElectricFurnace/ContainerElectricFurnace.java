@@ -2,7 +2,7 @@ package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
-import com.extralent.api.tools.IMachineStateContainer;
+import com.extralent.api.tools.Interfaces.IMachineStateContainer;
 import com.extralent.common.config.ElectricFurnaceConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

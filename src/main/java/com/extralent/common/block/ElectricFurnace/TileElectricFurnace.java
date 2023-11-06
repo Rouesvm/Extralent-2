@@ -1,8 +1,9 @@
 package com.extralent.common.block.ElectricFurnace;
 
 import com.extralent.api.tools.ETEnergyStorage;
-import com.extralent.api.tools.IGuiTile;
-import com.extralent.api.tools.IRestorableTileEntity;
+import com.extralent.api.tools.Interfaces.IGuiTile;
+import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
+import com.extralent.api.tools.MachineHelper;
 import com.extralent.common.config.ElectricFurnaceConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -44,6 +45,11 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         if (!world.isRemote) {
             if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
+                setProgress(0);
+                return;
+            }
+            if (MachineHelper.isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
+                setState(FurnaceState.OFF);
                 setProgress(0);
                 return;
             }

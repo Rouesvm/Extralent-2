@@ -1,6 +1,6 @@
 package com.extralent.common.core.handler;
 
-import com.extralent.api.tools.IGuiTile;
+import com.extralent.api.tools.Interfaces.IGuiTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

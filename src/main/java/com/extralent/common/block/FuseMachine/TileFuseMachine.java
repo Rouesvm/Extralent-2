@@ -1,8 +1,9 @@
 package com.extralent.common.block.FuseMachine;
 
 import com.extralent.api.tools.ETEnergyStorage;
-import com.extralent.api.tools.IGuiTile;
-import com.extralent.api.tools.IRestorableTileEntity;
+import com.extralent.api.tools.Interfaces.IGuiTile;
+import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
+import com.extralent.api.tools.MachineHelper;
 import com.extralent.api.tools.RecipeAPI;
 import com.extralent.client.sounds.SoundHandler;
 import com.extralent.common.config.FuseMachineConfig;
@@ -48,7 +49,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
                 setProgress(0);
                 return;
             }
-            if (inputHandler.getStackInSlot(0).isEmpty() | inputHandler.getStackInSlot(1).isEmpty()) {
+            if (MachineHelper.isSlotEmpty(INPUT_SLOTS, inputHandler)) {
                 setState(MachineState.OFF);
                 setProgress(0);
                 return;

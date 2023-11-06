@@ -1,7 +1,7 @@
 package com.extralent.api.network;
 
 import com.extralent.Extralent;
-import com.extralent.api.tools.IMachineStateContainer;
+import com.extralent.api.tools.Interfaces.IMachineStateContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

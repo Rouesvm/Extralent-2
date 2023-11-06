@@ -1,4 +1,4 @@
-package com.extralent.api.tools;
+package com.extralent.api.tools.Interfaces;
 
 public interface IMachineStateContainer {
 
