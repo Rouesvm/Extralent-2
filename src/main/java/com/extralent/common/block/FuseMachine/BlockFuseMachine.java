@@ -1,6 +1,6 @@
 package com.extralent.common.block.FuseMachine;
 
-import com.extralent.common.block.GenericBlock;
+import com.extralent.common.block.MachineBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
@@ -24,7 +25,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockFuseMachine extends GenericBlock implements ITileEntityProvider {
+public class BlockFuseMachine extends MachineBlock implements ITileEntityProvider {
 
     protected String name;
 
@@ -80,7 +81,8 @@ public class BlockFuseMachine extends GenericBlock implements ITileEntityProvide
         return super.getActualState(state, world, pos);
     }
 
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand enumHand) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer));
     }
 

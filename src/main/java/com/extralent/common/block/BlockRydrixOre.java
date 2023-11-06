@@ -27,19 +27,9 @@ public class BlockRydrixOre extends GenericBlock {
     }
 
     @Override
-    public int damageDropped(IBlockState state) {
-        return state.getValue(ORETYPE).ordinal();
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public void registerItemModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "oretype=overworld"));
-    }
-
-    @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(new ItemStack(this, 1, 0));
     }
 
     @Override
@@ -55,5 +45,15 @@ public class BlockRydrixOre extends GenericBlock {
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, ORETYPE);
+    }
+
+    @Override
+    public int damageDropped(IBlockState state) {
+        return state.getValue(ORETYPE).ordinal();
+    }
+
+    @Override
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        subItems.add(new ItemStack(this, 1, 0));
     }
 }
