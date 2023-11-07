@@ -1,9 +1,9 @@
 {
   "fuse": {
-    "category" : "block",
+    "category" : "BLOCKS",
     "sounds": [{
         "name": "extralent:fuse",
-        "stream": false
+        "stream": true
       }
     ]
   }

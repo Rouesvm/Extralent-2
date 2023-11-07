@@ -4,6 +4,7 @@ import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
 import com.extralent.common.config.FuseMachineConfig;
+import com.extralent.common.tile.TileFuseMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;

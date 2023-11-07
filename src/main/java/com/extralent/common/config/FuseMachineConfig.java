@@ -5,7 +5,6 @@ import net.minecraftforge.common.config.Config;
 
 @Config(modid = ModMisc.MODID, category = "fusemachine")
 public class FuseMachineConfig {
-
     @Config.Comment(value = "Number of ticks for one fusing operation")
     @Config.RangeInt(min = 1)
     public static int MAX_PROGRESS = 200;

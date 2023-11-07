@@ -1,9 +1,9 @@
 package com.extralent.common.block;
 
 import com.extralent.common.block.ElectricFurnace.BlockElectricFurnace;
-import com.extralent.common.block.ElectricFurnace.TileElectricFurnace;
+import com.extralent.common.tile.TileElectricFurnace;
 import com.extralent.common.block.FuseMachine.BlockFuseMachine;
-import com.extralent.common.block.FuseMachine.TileFuseMachine;
+import com.extralent.common.tile.TileFuseMachine;
 import com.extralent.common.misc.ModMisc;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

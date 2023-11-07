@@ -16,12 +16,12 @@ public class MachineHelper {
     }
 
     public static boolean isAllSlotEmpty(int amount, ItemStackHandler slots) {
-        int slotIsEmptyAmount = 0;
+        int isAllSlotEmpty = 0;
 
         for (int i = 0; i < amount; i++) {
             if (slots.getStackInSlot(i).isEmpty()) {
-                slotIsEmptyAmount++;
-                if (slotIsEmptyAmount == amount) {
+                isAllSlotEmpty++;
+                if (isAllSlotEmpty == amount) {
                     return true;
                 }
             }
