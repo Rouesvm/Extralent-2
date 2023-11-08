@@ -3,6 +3,7 @@ package com.extralent.api.tools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,13 +25,26 @@ public class RecipeAPI {
             Iterator<ItemStack> iterator = remainingInputs.iterator();
             while (iterator.hasNext()) {
                 ItemStack input = iterator.next();
-                if (ItemStack.areItemsEqual(stack, input)) {
+                if (ItemStack.areItemsEqual(stack, input) || isOreDictionaryMatch(stack, input)) {
                     iterator.remove();
                     break;
                 }
             }
         }
         return remainingInputs.isEmpty();
+    }
+
+    private boolean isOreDictionaryMatch(ItemStack stackA, ItemStack stackB) {
+        int[] stacksA = OreDictionary.getOreIDs(stackA);
+        int[] stacksB = OreDictionary.getOreIDs(stackB);
+        for (int stack0 : stacksA) {
+            for (int stack1 : stacksB) {
+                if (stack0 == stack1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public ItemStack getCraftingResult(ItemStackHandler inv) {
