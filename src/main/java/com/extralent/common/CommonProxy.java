@@ -23,7 +23,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -45,7 +44,7 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        OreDictionary.registerOre("oreRydrix", ModBlocks.rydrixOre);
+        ModBlocks.registerOreDict();
     }
 
     @SubscribeEvent

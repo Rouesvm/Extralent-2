@@ -1,0 +1,11 @@
+{
+  "block.machine.fuse": {
+    "category" : "block",
+    "subtitle": "block.machine.fuse",
+    "sounds": [{
+        "name": "extralent:block/machine/fuse",
+        "stream": true
+      }
+    ]
+  }
+}

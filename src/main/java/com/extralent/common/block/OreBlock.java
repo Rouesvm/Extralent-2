@@ -1,6 +1,5 @@
 package com.extralent.common.block;
 
-import com.extralent.common.misc.ModMisc;
 import com.extralent.common.worldgen.OreType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -11,17 +10,15 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockRydrixOre extends GenericBlock {
+public class OreBlock extends GenericBlock {
 
     public static final PropertyEnum<OreType> ORETYPE = PropertyEnum.create("oretype", OreType.class);
-    public static final ResourceLocation RYDRIXORE = new ResourceLocation(ModMisc.MODID, "RYDRIXORE");
 
-    public BlockRydrixOre(String name) {
+    public OreBlock(String name) {
         super(name, Material.IRON, "pickaxe", 2);
         setHardness(3.0f);
     }

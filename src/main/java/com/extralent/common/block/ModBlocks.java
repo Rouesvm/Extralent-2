@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
@@ -22,7 +23,7 @@ public class ModBlocks {
     public static BlockElectricFurnace electricFurnace = new BlockElectricFurnace("electric_furnace");
     public static BlockFuseMachine fuseMachine = new BlockFuseMachine("fuse_machine");
 
-    public static BlockRydrixOre rydrixOre = new BlockRydrixOre("rydrix_ore");
+    public static OreBlock rydrixOre = new OreBlock("rydrix_ore");
 
     public static void registerBlocks(IForgeRegistry<Block> registry) {
         registry.registerAll(
@@ -52,6 +53,10 @@ public class ModBlocks {
         electricFurnace.registerItemModel();
         fuseMachine.registerItemModel();
         rydrixOre.registerItemModel();
+    }
+
+    public static void registerOreDict() {
+        OreDictionary.registerOre("oreRydrix", ModBlocks.rydrixOre);
     }
 
     private static void registerTileEntities() {

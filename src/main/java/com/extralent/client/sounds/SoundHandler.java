@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
 public class SoundHandler {
-    public static final SoundEvent FUSE = addSoundsToRegistry("fuse");
+    public static final SoundEvent FUSE = addSoundsToRegistry("block.machine.fuse");
 
     private static SoundEvent addSoundsToRegistry(String soundName) {
         ResourceLocation soundID = new ResourceLocation(ModMisc.MODID, soundName);
