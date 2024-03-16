@@ -26,7 +26,8 @@ public class OreBlock extends GenericBlock {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerItemModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "oretype=overworld"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0,
+                new ModelResourceLocation(getRegistryName(), "oretype=overworld"));
     }
 
     @Override

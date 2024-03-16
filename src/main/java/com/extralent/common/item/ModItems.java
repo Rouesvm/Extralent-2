@@ -6,9 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class ModItems {
+
+    public static final ArrayList<GenericItem> itemList = new ArrayList<>();
 
     public static GenericItem lydrix = new GenericItem("lydrix") {
         @Override
@@ -19,15 +22,15 @@ public class ModItems {
     public static GenericItem rydrixIngot = new GenericItem("rydrix_ingot");
 
     public static void register(IForgeRegistry<Item> registry) {
-        registry.registerAll(
-                lydrix,
-                rydrixIngot
-        );
+        for (GenericItem item : itemList) {
+            registry.register(item);
+        }
     }
 
     public static void registerModels() {
-        lydrix.registerItemModel();
-        rydrixIngot.registerItemModel();
+        for (GenericItem item : itemList) {
+            item.registerItemModel();
+        }
     }
 
     public static void registerFuelHandlers() {

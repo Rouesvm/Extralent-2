@@ -2,7 +2,6 @@ package com.extralent.common;
 
 import com.extralent.Extralent;
 import com.extralent.api.network.Messages;
-import com.extralent.client.sounds.SoundHandler;
 import com.extralent.common.block.ModBlocks;
 import com.extralent.common.core.handler.FuelHandler;
 import com.extralent.common.core.handler.GuiHandler;

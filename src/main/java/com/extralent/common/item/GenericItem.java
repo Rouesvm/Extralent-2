@@ -17,6 +17,8 @@ public class GenericItem extends Item {
         this.setCreativeTab(Extralent.creativeTab);
         this.setRegistryName(new ResourceLocation(ModMisc.MODID, name));
         this.setTranslationKey(ModMisc.MODID + "." + name);
+
+        ModItems.itemList.add(this);
     }
 
     public void registerItemModel() {

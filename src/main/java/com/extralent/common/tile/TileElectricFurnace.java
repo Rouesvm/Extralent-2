@@ -37,6 +37,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     public static final int OUTPUT_SLOTS = 3;
     public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
+    private int resultLimit = 2;
     private int progress = 0;
     private FurnaceState state = FurnaceState.NOPOWER;
 
@@ -58,7 +59,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
             }
             if (progress > 0) {
                 setState(FurnaceState.ON);
-                energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK);
                 progress--;
                 if (progress == 0) {
                     attemptSmelt();
@@ -80,29 +80,39 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     }
 
     private void startSmelt() {
+        boolean canSmelt = false;
+
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
-            ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
+            ItemStack input = inputHandler.getStackInSlot(i);
+            ItemStack result = input != null ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
+
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), true)) {
-                    setState(FurnaceState.ON);
-                    progress = ElectricFurnaceConfig.MAX_PROGRESS;
-                    world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    canSmelt = true;
                     markDirty();
-                    return;
                 }
             }
         }
-        setState(FurnaceState.OFF);
+
+        if (canSmelt) {
+            setState(FurnaceState.ON);
+            progress = ElectricFurnaceConfig.MAX_PROGRESS;
+        } else {
+            setState(FurnaceState.OFF);
+        }
     }
 
     private void attemptSmelt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
-            ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inputHandler.getStackInSlot(i));
+            ItemStack input = inputHandler.getStackInSlot(i);
+            ItemStack result = input != null ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
+
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), false)) {
+                    energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK);
+
                     inputHandler.extractItem(i, 1, false);
                     markDirty();
-                    break;
                 }
             }
         }

@@ -11,6 +11,13 @@ public class ETEnergyStorage extends EnergyStorage {
         this.energy = energy;
     }
 
+    public void addPower(int energy) {
+        int maxEnergy = this.getMaxEnergyStored();
+        if (this.energy < maxEnergy) {
+            this.energy += energy;
+        }
+    }
+
     public void consumePower(int energy) {
         this.energy -= energy;
         if (this.energy < 0) {

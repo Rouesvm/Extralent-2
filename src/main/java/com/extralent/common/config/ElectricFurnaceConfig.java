@@ -14,8 +14,8 @@ public class ElectricFurnaceConfig {
     public static int MAX_POWER = 95000;
 
     @Config.Comment(value = "How much RF per tick the electric furnace can receive")
-    public static int RF_PER_TICK_INPUT = 125;
+    public static int RF_PER_TICK_INPUT = 200;
 
     @Config.Comment(value = "How much RF per tick the electric furnace use while smelting")
-    public static int RF_PER_TICK = 50;
+    public static int RF_PER_TICK = 45;
 }

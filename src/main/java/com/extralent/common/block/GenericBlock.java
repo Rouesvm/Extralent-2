@@ -26,6 +26,8 @@ public class GenericBlock extends Block {
         this.setCreativeTab(Extralent.creativeTab);
         this.setRegistryName(new ResourceLocation(ModMisc.MODID, name));
         this.setTranslationKey(ModMisc.MODID + "." + name);
+
+        ModBlocks.blockList.add(this);
     }
 
     @Override
@@ -33,12 +35,17 @@ public class GenericBlock extends Block {
         return super.setHardness(hardness);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerItemModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory"));
-    }
-
     public Item getItemBlock() {
         return new ItemBlock(this).setRegistryName(Objects.requireNonNull(getRegistryName()));
+    }
+
+    public ResourceLocation getResourceLocation() {
+        return new ResourceLocation(ModMisc.MODID + "_" + this.name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerItemModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0,
+                new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory"));
     }
 }
