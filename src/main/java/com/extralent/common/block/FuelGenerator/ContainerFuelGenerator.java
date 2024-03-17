@@ -21,14 +21,8 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
 
     private final TileFuelGenerator tileEntity;
 
-    private static final int PROGRESS_ID = 0;
-
     public ContainerFuelGenerator(IInventory playerInventory, TileFuelGenerator tileEntity) {
         this.tileEntity = tileEntity;
-
-        // This container references items out of our own inventory (the 9 slots we hold ourselves)
-        // as well as the slots from the player inventory so that the user can transfer items between
-        // both inventories. The two calls below make sure that slots are defined for both inventories.
         addOwnSlots();
         addPlayerSlots(playerInventory);
     }
@@ -53,17 +47,10 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 54;
-        int y = 23;
+        int x = 38;
+        int y = 33;
 
-        int slotIndex = 0;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
-        y += 20;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
-
-        y = 33;
-        x = 115;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 0, x, y));
     }
 
     @Override
@@ -103,13 +90,12 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
         super.detectAndSendChanges();
         if (!tileEntity.getWorld().isRemote) {
             if (tileEntity.getEnergy() != tileEntity.getClientEnergy() || tileEntity.getProgress() != tileEntity.getClientProgress()) {
-                tileEntity.setClientEnergy(tileEntity.getEnergy());
-                tileEntity.setClientProgress(tileEntity.getProgress());
+                sync(tileEntity.getEnergy(), tileEntity.getCurrentMaxBurnTime());
 
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {
                         EntityPlayerMP player = (EntityPlayerMP) listener;
-                        int percentage = GuiFuelGenerator.arrowWidth - tileEntity.getClientProgress() * GuiFuelGenerator.arrowWidth / FuseMachineConfig.MAX_PROGRESS;
+                        int percentage = tileEntity.getClientProgress();
                         Messages.INSTANCE.sendTo(new PacketSyncMachineState(tileEntity.getEnergy(), percentage), player);
                     }
                 }

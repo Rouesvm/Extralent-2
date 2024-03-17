@@ -1,19 +1,13 @@
 package com.extralent.common.tile;
 
+import akka.io.SelectionHandlerSettings;
 import com.extralent.api.tools.ETEnergyStorage;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
-import com.extralent.api.tools.MachineHelper;
-import com.extralent.api.tools.RecipeAPI;
-import com.extralent.client.sounds.SoundHandler;
-import com.extralent.common.block.ElectricFurnace.FurnaceState;
 import com.extralent.common.block.FuelGenerator.ContainerFuelGenerator;
 import com.extralent.common.block.FuelGenerator.GuiFuelGenerator;
 import com.extralent.common.block.FuelGenerator.MachineState;
-import com.extralent.common.config.ElectricFurnaceConfig;
 import com.extralent.common.config.FuseMachineConfig;
-import com.extralent.common.core.handler.FuelHandler;
-import com.extralent.common.recipe.RecipeHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,14 +20,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import org.apache.commons.lang3.ObjectUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,10 +34,10 @@ import javax.annotation.Nullable;
 public class TileFuelGenerator extends TileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 1;
-    public static final int OUTPUT_SLOTS = 0;
-    public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
     private int progress = 0;
+    private int currentMaxBurnTime = 0;
+
     private MachineState state = MachineState.OFF;
 
     private int clientProgress = -1;
@@ -53,74 +46,59 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (MachineHelper.isSlotEmpty(INPUT_SLOTS, inputHandler)) {
-                setState(MachineState.OFF);
-                setProgress(0);
-                return;
-            }
-            if (progress > 0) {
-                setState(MachineState.ON);
-                progress--;
-                if (progress == 0) {
-                    attempt();
+            if (canSmelt()) {
+                if (progress <= 0) {
+                    start();
+                } else {
+                    energyStorage.addPower(currentMaxBurnTime / 100);
+                    progress--;
+
+                    if (progress >= currentMaxBurnTime) {
+                        progress = 0;
+                    }
                 }
             } else {
-                start();
+                progress = 0;
             }
+
+            sendEnergy();
+        }
+    }
+
+    private void start() {
+        ItemStack input = inputHandler.getStackInSlot(0);
+        if (!input.isEmpty()) {
+            currentMaxBurnTime += getBurnTime(input);
+            progress += currentMaxBurnTime;
+
+            inputHandler.extractItem(0, 1, false);
+            markDirty();
+        }
+    }
+
+    private boolean canSmelt() {
+        ItemStack input = inputHandler.getStackInSlot(0);
+        if (isFuelItemValidForSlot(input)) {
+            markDirty();
+            return true;
         }
 
-        for (EnumFacing facing : EnumFacing.values()) {
-            TileEntity neighbor = world.getTileEntity(pos.offset(facing));
-            if (neighbor != null && neighbor.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
-                IEnergyStorage neighborEnergy = neighbor.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
-                if (neighborEnergy != null && neighborEnergy.canReceive()) {
-                    int energyToTransfer = Math.min(energyStorage.getEnergyStored(), 200); // Replace EXTRACT_PER_TICK with desired amount
-                    int transferred = neighborEnergy.receiveEnergy(energyToTransfer, false);
-                    energyStorage.consumePower(transferred);
-                }
-            }
-        }
+        return false;
     }
 
     public static int getBurnTime(ItemStack item) {
         return TileEntityFurnace.getItemBurnTime(item);
     }
 
-    public boolean isItemValidForSlot(ItemStack item) {
+    public boolean isFuelItemValidForSlot(ItemStack item) {
         return TileEntityFurnace.isItemFuel(item);
     }
 
-    private void start() {
-        boolean canSmelt = false;
-
-        for (int i = 0 ; i < INPUT_SLOTS ; i++) {
-            ItemStack input = inputHandler.getStackInSlot(i);
-            if (isItemValidForSlot(input)) {
-                canSmelt = true;
-                markDirty();
-            }
+    public int getCurrentMaxBurnTime() {
+        if (progress <= 0) {
+            return 0;
         }
-
-        if (canSmelt) {
-            setState(MachineState.ON);
-            progress = ElectricFurnaceConfig.MAX_PROGRESS;
-        } else {
-            setState(MachineState.OFF);
-        }
-    }
-
-    private void attempt() {
-        for (int i = 0 ; i < INPUT_SLOTS ; i++) {
-            ItemStack input = inputHandler.getStackInSlot(i);
-            if (isItemValidForSlot(input)) {
-                int burnTime = getBurnTime(input);
-
-                inputHandler.extractItem(i, 1, false);
-                energyStorage.addPower((burnTime / 200) * 10);
-
-                markDirty();
-            }
-        }
+        return progress / currentMaxBurnTime;
     }
 
     public int getProgress() {
@@ -149,6 +127,27 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
 
     public int getEnergy() {
         return energyStorage.getEnergyStored();
+    }
+
+    //------------------------------------------------------------------------
+
+    private void sendEnergy() {
+        if (energyStorage.getEnergyStored() > 0) {
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
+                if (tileEntity != null && tileEntity.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+                    IEnergyStorage handler = tileEntity.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
+                    if (handler != null && handler.canReceive()) {
+                        int accepted = handler.receiveEnergy(energyStorage.getEnergyStored(), false);
+                        energyStorage.consumePower(accepted);
+                        if (energyStorage.getEnergyStored() <= 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+            markDirty();
+        }
     }
 
     //------------------------------------------------------------------------
@@ -210,7 +209,7 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
 
     //------------------------------------------------------------------------
 
-    private final ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
+    private static final ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, 0);
 
     //------------------------------------------------------------------------
 

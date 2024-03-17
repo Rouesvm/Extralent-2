@@ -3,6 +3,7 @@ package com.extralent.api.tools;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class ETEnergyStorage extends EnergyStorage {
+
     public ETEnergyStorage(int capacity, int maxReceive) {
         super(capacity, maxReceive);
     }

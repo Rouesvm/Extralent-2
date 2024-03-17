@@ -1,5 +1,6 @@
 package com.extralent.common.block.FuelGenerator;
 
+import akka.io.SelectionHandlerSettings;
 import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.misc.ModMisc;
 import com.extralent.common.tile.TileFuelGenerator;
@@ -7,16 +8,20 @@ import com.extralent.common.tile.TileFuseMachine;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
+import java.util.logging.Logger;
 
 public class GuiFuelGenerator extends GuiContainer {
+
     public static final int WIDTH = 180;
     public static final int HEIGHT = 152;
 
-    public static final int arrowWidth = 44 + 1;
+    public int progressHeight = 13;
+    public int arrowLength = progressHeight + 1;
 
-    private static final ResourceLocation TEXTURES = new ResourceLocation(ModMisc.MODID, "textures/gui/fuse_machine_gui.png");
+    private static final ResourceLocation TEXTURES = new ResourceLocation(ModMisc.MODID, "textures/gui/fuel_generator_gui.png");
     private final TileFuelGenerator furnace;
 
     public GuiFuelGenerator(TileFuelGenerator tileEntity, ContainerFuelGenerator container) {
@@ -40,19 +45,20 @@ public class GuiFuelGenerator extends GuiContainer {
     }
 
     private void drawProgressArrow(int progress) {
-        int arrowX = 65;
-        int arrowY = 3;
+        int arrowX = 41;
+        int arrowY = 18;
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        if (progress < arrowWidth) {
-            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, progress + 1, 19);
+
+        if (progress > 0) {
+            int yOffset = progress * progressHeight;
+            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 181, 1 + progress, 13, yOffset);
         } else {
-            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 1, 153, 0, 19);
+            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 181, 1, 13, 0);
         }
     }
 
     private void drawEnergyBar(int energy) {
-        //drawRect(guiLeft + 9, guiTop + 5, guiLeft + 20, guiTop + 63, 0xffffffff);
         int percentage = energy * 57 / FuseMachineConfig.MAX_POWER;
         for (int i = 0; i < percentage; i++) {
             int color = i % 2 == 0 ? 0xffee1c00 : 0xffbd1600;
