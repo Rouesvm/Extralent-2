@@ -4,7 +4,7 @@ import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
 import com.extralent.common.config.ElectricFurnaceConfig;
-import com.extralent.common.tile.TileElectricFurnace;
+import com.extralent.common.block.BlockTileEntities.TileElectricFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;

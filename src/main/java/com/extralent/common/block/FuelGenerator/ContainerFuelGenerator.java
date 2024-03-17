@@ -3,7 +3,7 @@ package com.extralent.common.block.FuelGenerator;
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
-import com.extralent.common.tile.TileFuelGenerator;
+import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;

@@ -2,15 +2,13 @@ package com.extralent.common.block;
 
 import com.extralent.common.block.ElectricFurnace.BlockElectricFurnace;
 import com.extralent.common.block.FuelGenerator.BlockFuelGenerator;
-import com.extralent.common.tile.TileElectricFurnace;
+import com.extralent.common.block.BlockTileEntities.TileElectricFurnace;
 import com.extralent.common.block.FuseMachine.BlockFuseMachine;
-import com.extralent.common.tile.TileFuelGenerator;
-import com.extralent.common.tile.TileFuseMachine;
-import com.extralent.common.misc.ModMisc;
+import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
+import com.extralent.common.block.BlockTileEntities.TileFuseMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
