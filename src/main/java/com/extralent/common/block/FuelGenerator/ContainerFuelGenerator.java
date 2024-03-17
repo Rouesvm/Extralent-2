@@ -3,9 +3,7 @@ package com.extralent.common.block.FuelGenerator;
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
-import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.tile.TileFuelGenerator;
-import com.extralent.common.tile.TileFuseMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -62,11 +60,11 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
             ItemStack itemStack1 = slot.getStack();
             itemStack = itemStack1.copy();
 
-            if (index < TileFuseMachine.SIZE) {
-                if (!this.mergeItemStack(itemStack1, TileFuseMachine.SIZE, this.inventorySlots.size(), true)) {
+            if (index < TileFuelGenerator.INPUT_SLOTS) {
+                if (!this.mergeItemStack(itemStack1, TileFuelGenerator.INPUT_SLOTS, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemStack1, 0, TileFuseMachine.SIZE, false)) {
+            } else if (!this.mergeItemStack(itemStack1, 0, TileFuelGenerator.INPUT_SLOTS, false)) {
                 return ItemStack.EMPTY;
             }
 

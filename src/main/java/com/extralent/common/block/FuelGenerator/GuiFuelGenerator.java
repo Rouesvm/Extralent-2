@@ -1,17 +1,13 @@
 package com.extralent.common.block.FuelGenerator;
 
-import akka.io.SelectionHandlerSettings;
 import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.misc.ModMisc;
 import com.extralent.common.tile.TileFuelGenerator;
-import com.extralent.common.tile.TileFuseMachine;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
-import java.util.logging.Logger;
 
 public class GuiFuelGenerator extends GuiContainer {
 
