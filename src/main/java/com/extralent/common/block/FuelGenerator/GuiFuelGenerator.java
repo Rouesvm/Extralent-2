@@ -1,5 +1,6 @@
 package com.extralent.common.block.FuelGenerator;
 
+import akka.io.SelectionHandlerSettings;
 import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.misc.ModMisc;
 import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
@@ -44,11 +45,11 @@ public class GuiFuelGenerator extends GuiContainer {
         int arrowX = 41;
         int arrowY = 18;
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        int yOffset = (progressHeight * progress) / 10;
 
-        if (progress > 0) {
-            int yOffset = progress * progressHeight;
-            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 181, 1 + progress, 13, yOffset);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        if (yOffset > 0) {
+            drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY + yOffset, 181, 1 + yOffset, 13, progressHeight - yOffset);
         } else {
             drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 181, 1, 13, 0);
         }

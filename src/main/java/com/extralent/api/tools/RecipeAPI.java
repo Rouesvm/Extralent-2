@@ -34,9 +34,9 @@ public class RecipeAPI {
         return remainingInputs.isEmpty();
     }
 
-    private boolean isOreDictionaryMatch(ItemStack stackA, ItemStack stackB) {
-        int[] stacksA = OreDictionary.getOreIDs(stackA);
-        int[] stacksB = OreDictionary.getOreIDs(stackB);
+    private boolean isOreDictionaryMatch(ItemStack stack, ItemStack input) {
+        int[] stacksA = OreDictionary.getOreIDs(stack);
+        int[] stacksB = OreDictionary.getOreIDs(input);
         for (int stack0 : stacksA) {
             for (int stack1 : stacksB) {
                 if (stack0 == stack1) {

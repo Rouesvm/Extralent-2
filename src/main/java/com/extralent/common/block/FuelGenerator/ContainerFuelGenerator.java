@@ -45,8 +45,8 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 38;
-        int y = 33;
+        int x = 39;
+        int y = 34;
 
         addSlotToContainer(new SlotItemHandler(itemHandler, 0, x, y));
     }
@@ -93,8 +93,7 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {
                         EntityPlayerMP player = (EntityPlayerMP) listener;
-                        int percentage = tileEntity.getClientProgress();
-                        Messages.INSTANCE.sendTo(new PacketSyncMachineState(tileEntity.getEnergy(), percentage), player);
+                        Messages.INSTANCE.sendTo(new PacketSyncMachineState(tileEntity.getEnergy(), tileEntity.getClientProgress()), player);
                     }
                 }
             }

@@ -25,7 +25,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileFuelGenerator extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
@@ -44,8 +43,6 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
     @Override
     public void update() {
         if (!getWorld().isRemote) {
-            sendEnergy();
-
             if (progress > 0) {
                 energyStorage.generatePower(totalBurnTime / 80);
                 markDirty();
@@ -60,6 +57,8 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
 
                 start();
             }
+
+            sendEnergy();
         }
     }
 
@@ -68,8 +67,8 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
         if (!input.isEmpty()) {
             int fuelBurnTime = getBurnTime(input);
             if (fuelBurnTime > 0) {
-                totalBurnTime += fuelBurnTime;
-                progress += fuelBurnTime;
+                totalBurnTime = fuelBurnTime;
+                progress = fuelBurnTime;
 
                 inputHandler.extractItem(0, 1, false);
                 markDirty();
@@ -99,7 +98,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
         if (progress <= 0 || totalBurnTime <= 0) {
             return 0;
         }
-        return progress / totalBurnTime;
+        return (progress * 10) / (totalBurnTime);
     }
 
     public int getClientEnergy() {
@@ -167,7 +166,6 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
 
     //------------------------------------------------------------------------
 
-    // This item handler will hold our three input slots
     private final ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
@@ -179,8 +177,6 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
             TileFuelGenerator.this.markDirty();
         }
     };
-
-    // This item handler will hold our three output slots
 
     private final CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler);
 
@@ -199,6 +195,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
             inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
         }
         progress = compound.getInteger("progress");
+        totalBurnTime = compound.getInteger("totalBurnTime");
         energyStorage.setEnergy(compound.getInteger("energy"));
     }
 
@@ -214,6 +211,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
     public void writeRestorableToNBT(NBTTagCompound compound) {
         compound.setTag("itemsIn", inputHandler.serializeNBT());
         compound.setInteger("progress", progress);
+        compound.setInteger("totalBurnTime", totalBurnTime);
         compound.setInteger("energy", energyStorage.getEnergyStored());
     }
 

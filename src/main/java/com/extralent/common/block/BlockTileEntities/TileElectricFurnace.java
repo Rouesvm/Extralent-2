@@ -38,6 +38,7 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
     private FurnaceState state = FurnaceState.NOPOWER;
 
     private int clientEnergy = -1;
+    private int currentInputSlot;
 
     public TileElectricFurnace() {
         super(SIZE, ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
@@ -109,8 +110,10 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
             ItemStack result = !input.isEmpty() ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
 
             if (!result.isEmpty()) {
+                currentInputSlot = i;
+
                 if (insertOutput(result.copy(), false)) {
-                    energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK);
+                    energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK * currentInputSlot);
 
                     inputHandler.extractItem(i, 1, false);
                     markDirty();

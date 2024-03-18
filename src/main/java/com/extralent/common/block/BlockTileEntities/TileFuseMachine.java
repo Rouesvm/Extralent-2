@@ -122,10 +122,6 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
         this.clientEnergy = clientEnergy;
     }
 
-    public int getEnergy() {
-        return energyStorage.getEnergyStored();
-    }
-
     //------------------------------------------------------------------------
 
     @Override

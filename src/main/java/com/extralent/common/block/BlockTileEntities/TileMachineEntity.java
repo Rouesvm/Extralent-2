@@ -39,8 +39,8 @@ public class TileMachineEntity extends TileEntity {
         return clientProgress;
     }
 
-    public void setClientProgress(int clientProgress) {
-        this.clientProgress = clientProgress;
+    public void setClientProgress(int currentProgress) {
+        this.clientProgress = currentProgress;
     }
 
     //-------------------------------------------------------------------------
