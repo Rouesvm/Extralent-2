@@ -1,6 +1,6 @@
 package com.extralent.common.block.BlockTileEntities;
 
-import com.extralent.api.tools.ETEnergyStorage;
+import com.extralent.api.tools.TEnergyStorage;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.api.tools.MachineHelper;
@@ -29,32 +29,35 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileElectricFurnace extends TileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileElectricFurnace extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 3;
     public static final int OUTPUT_SLOTS = 3;
     public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
-    private int resultLimit = 2;
-    private int progress = 0;
     private FurnaceState state = FurnaceState.NOPOWER;
 
-    private int clientProgress = -1;
     private int clientEnergy = -1;
+
+    public TileElectricFurnace() {
+        super(SIZE, ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
+    }
 
     @Override
     public void update() {
-        if (!world.isRemote) {
+        if (!getWorld().isRemote) {
             if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
                 setProgress(0);
                 return;
             }
+
             if (MachineHelper.isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
                 setState(FurnaceState.OFF);
                 setProgress(0);
                 return;
             }
+
             if (progress > 0) {
                 setState(FurnaceState.ON);
                 progress--;
@@ -82,7 +85,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
 
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack input = inputHandler.getStackInSlot(i);
-            ItemStack result = input != null ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
+            ItemStack result = !input.isEmpty() ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
 
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), true)) {
@@ -103,7 +106,7 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
     private void attemptSmelt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack input = inputHandler.getStackInSlot(i);
-            ItemStack result = input != null ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
+            ItemStack result = !input.isEmpty() ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
 
             if (!result.isEmpty()) {
                 if (insertOutput(result.copy(), false)) {
@@ -116,20 +119,8 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         }
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
     public void setProgress(int progress) {
         this.progress = progress;
-    }
-
-    public int getClientProgress() {
-        return clientProgress;
-    }
-
-    public void setClientProgress(int clientProgress) {
-        this.clientProgress = clientProgress;
     }
 
     public int getClientEnergy() {
@@ -140,10 +131,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         this.clientEnergy = clientEnergy;
     }
 
-    public int getEnergy() {
-        return energyStorage.getEnergyStored();
-    }
-
     //------------------------------------------------------------------------
 
     @Override
@@ -151,12 +138,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         NBTTagCompound nbtTag = super.getUpdateTag();
         nbtTag.setInteger("state", state.ordinal());
         return nbtTag;
-    }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
     }
 
     @Override
@@ -215,10 +196,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
 
     //------------------------------------------------------------------------
 
-    private final ETEnergyStorage energyStorage = new ETEnergyStorage(ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
-
-    //------------------------------------------------------------------------
-
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -252,11 +229,6 @@ public class TileElectricFurnace extends TileEntity implements ITickable, IResto
         compound.setTag("itemsOut", outputHandler.serializeNBT());
         compound.setInteger("progress", progress);
         compound.setInteger("energy", energyStorage.getEnergyStored());
-    }
-
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        // If we are too far away from this tile entity you cannot use it
-        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
 
     @Override

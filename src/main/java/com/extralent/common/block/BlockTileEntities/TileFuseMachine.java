@@ -1,6 +1,6 @@
 package com.extralent.common.block.BlockTileEntities;
 
-import com.extralent.api.tools.ETEnergyStorage;
+import com.extralent.api.tools.TEnergyStorage;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.api.tools.MachineHelper;
@@ -32,36 +32,39 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileFuseMachine extends TileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileFuseMachine extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 2;
     public static final int OUTPUT_SLOTS = 1;
     public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
 
-    private int progress = 0;
     private MachineState state = MachineState.NOPOWER;
 
-    private int clientProgress = -1;
     private int clientEnergy = -1;
+
+    public TileFuseMachine() {
+        super(SIZE, FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
+    }
 
     @Override
     public void update() {
-        if (!world.isRemote) {
+        if (!getWorld().isRemote) {
             if (energyStorage.getEnergyStored() < FuseMachineConfig.RF_PER_TICK) {
                 setState(MachineState.NOPOWER);
-                setProgress(0);
+                progress = 0;
                 return;
             }
             if (MachineHelper.isSlotEmpty(INPUT_SLOTS, inputHandler)) {
                 setState(MachineState.OFF);
-                setProgress(0);
+                progress = 0;
                 return;
             }
+
             if (progress > 0) {
                 setState(MachineState.ON);
                 energyStorage.consumePower(FuseMachineConfig.RF_PER_TICK);
                 progress--;
-                if (progress == 0) {
+                if (progress <= 0) {
                     attemptFusing();
                 }
             } else {
@@ -86,6 +89,7 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
             setState(MachineState.OFF);
             return;
         }
+
         ItemStack result = recipe.getCraftingResult(inputHandler);
         if (insertOutput(result.copy(), true)) {
             setState(MachineState.ON);
@@ -101,28 +105,13 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
             setState(MachineState.OFF);
             return;
         }
+
         ItemStack result = recipe.getCraftingResult(inputHandler);
         if (insertOutput(result.copy(), false)) {
             inputHandler.extractItem(0, 1, false);
             inputHandler.extractItem(1, 1, false);
             markDirty();
         }
-    }
-
-    public int getProgress() {
-        return progress;
-    }
-
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
-
-    public int getClientProgress() {
-        return clientProgress;
-    }
-
-    public void setClientProgress(int clientProgress) {
-        this.clientProgress = clientProgress;
     }
 
     public int getClientEnergy() {
@@ -144,12 +133,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
         NBTTagCompound nbtTag = super.getUpdateTag();
         nbtTag.setInteger("state", state.ordinal());
         return nbtTag;
-    }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
     }
 
     @Override
@@ -205,12 +188,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
 
     private final CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler, outputHandler);
 
-    //------------------------------------------------------------------------
-
-    private final ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
-
-    //------------------------------------------------------------------------
-
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -244,11 +221,6 @@ public class TileFuseMachine extends TileEntity implements ITickable, IRestorabl
         compound.setTag("itemsOut", outputHandler.serializeNBT());
         compound.setInteger("progress", progress);
         compound.setInteger("energy", energyStorage.getEnergyStored());
-    }
-
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        // If we are too far away from this tile entity you cannot use it
-        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
 
     @Override

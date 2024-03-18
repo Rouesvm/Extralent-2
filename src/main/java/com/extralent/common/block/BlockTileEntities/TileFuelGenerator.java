@@ -1,12 +1,10 @@
 package com.extralent.common.block.BlockTileEntities;
 
-import com.extralent.api.tools.ETEnergyStorage;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.common.block.FuelGenerator.ContainerFuelGenerator;
 import com.extralent.common.block.FuelGenerator.GuiFuelGenerator;
 import com.extralent.common.block.FuelGenerator.MachineState;
-import com.extralent.common.config.FuseMachineConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,17 +27,19 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileFuelGenerator extends TileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileFuelGenerator extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 1;
 
-    private int progress = 0;
-    private int totalBurnTime = 0;
-
     private MachineState state = MachineState.OFF;
 
-    private int clientProgress = -1;
+    private int totalBurnTime = 0;
+
     private int clientEnergy = -1;
+
+    public TileFuelGenerator() {
+        super(INPUT_SLOTS, 350000, 0);
+    }
 
     @Override
     public void update() {
@@ -47,15 +47,13 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
             sendEnergy();
 
             if (progress > 0) {
-                progress--;
-
-                energyStorage.addPower((totalBurnTime / 20) * 4);
+                energyStorage.generatePower(totalBurnTime / 80);
                 markDirty();
 
-                if (progress >= totalBurnTime) {
-                    progress = 0;
-                }
+                progress--;
             } else {
+                progress = 0;
+
                 if (!canSmelt()) {
                     return;
                 }
@@ -104,22 +102,6 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
         return progress / totalBurnTime;
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
-
-    public int getClientProgress() {
-        return clientProgress;
-    }
-
-    public void setClientProgress(int clientProgress) {
-        this.clientProgress = clientProgress;
-    }
-
     public int getClientEnergy() {
         return clientEnergy;
     }
@@ -128,29 +110,27 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
         this.clientEnergy = clientEnergy;
     }
 
-    public int getEnergy() {
-        return energyStorage.getEnergyStored();
-    }
-
     //------------------------------------------------------------------------
 
     private void sendEnergy() {
-        if (energyStorage.getEnergyStored() > 0) {
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
-                if (tileEntity != null && tileEntity.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
-                    IEnergyStorage handler = tileEntity.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
-                    if (handler != null && handler.canReceive()) {
-                        int accepted = handler.receiveEnergy(energyStorage.getEnergyStored(), false);
-                        energyStorage.consumePower(accepted);
-                        if (energyStorage.getEnergyStored() <= 0) {
-                            break;
-                        }
+        if (energyStorage.getEnergyStored() <= 0) {
+            return;
+        }
+
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
+            if (tileEntity != null && tileEntity.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+                IEnergyStorage handler = tileEntity.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
+                if (handler != null && handler.canReceive()) {
+                    int accepted = handler.receiveEnergy(energyStorage.getEnergyStored(), false);
+                    energyStorage.consumePower(accepted);
+                    if (energyStorage.getEnergyStored() <= 0) {
+                        break;
                     }
                 }
             }
-            markDirty();
         }
+        markDirty();
     }
 
     //------------------------------------------------------------------------
@@ -160,12 +140,6 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
         NBTTagCompound nbtTag = super.getUpdateTag();
         nbtTag.setInteger("state", state.ordinal());
         return nbtTag;
-    }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
     }
 
     @Override
@@ -212,10 +186,6 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
 
     //------------------------------------------------------------------------
 
-    private static final ETEnergyStorage energyStorage = new ETEnergyStorage(FuseMachineConfig.MAX_POWER, 0);
-
-    //------------------------------------------------------------------------
-
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -245,11 +215,6 @@ public class TileFuelGenerator extends TileEntity implements ITickable, IRestora
         compound.setTag("itemsIn", inputHandler.serializeNBT());
         compound.setInteger("progress", progress);
         compound.setInteger("energy", energyStorage.getEnergyStored());
-    }
-
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        // If we are too far away from this tile entity you cannot use it
-        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
 
     @Override
