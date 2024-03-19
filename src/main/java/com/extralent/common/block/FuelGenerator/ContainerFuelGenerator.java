@@ -26,7 +26,6 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
     }
 
     private void addPlayerSlots(IInventory playerInventory) {
-        // Slots for the main inventory
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 int x = 10 + col * 18;
@@ -35,7 +34,6 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
             }
         }
 
-        // Slots for the hotbar
         for (int row = 0; row < 9; ++row) {
             int x = 10 + row * 18;
             int y = 58 + 70;

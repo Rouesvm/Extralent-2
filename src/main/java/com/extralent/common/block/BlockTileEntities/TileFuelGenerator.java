@@ -98,7 +98,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
         if (progress <= 0 || totalBurnTime <= 0) {
             return 0;
         }
-        return (progress * 10) / (totalBurnTime);
+        return (progress * 100) / (totalBurnTime);
     }
 
     public int getClientEnergy() {

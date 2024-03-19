@@ -45,10 +45,10 @@ public class GuiFuelGenerator extends GuiContainer {
         int arrowX = 41;
         int arrowY = 18;
 
-        int yOffset = (progressHeight * progress) / 10;
+        int yOffset = (progressHeight * progress) / 100;
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        if (yOffset > 0) {
+        if (progress > 0) {
             drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY + yOffset, 181, 1 + yOffset, 13, progressHeight - yOffset);
         } else {
             drawTexturedModalRect(guiLeft + arrowX, guiTop + arrowY, 181, 1, 13, 0);

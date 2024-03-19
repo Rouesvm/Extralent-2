@@ -42,7 +42,6 @@ public class MachineBlock extends GenericBlock {
     public void getDrops(NonNullList<ItemStack> result, IBlockAccess world, BlockPos pos, IBlockState metadata, int fortune) {
         TileEntity tileEntity = world.getTileEntity(pos);
 
-        // Always check this!
         if (tileEntity instanceof IRestorableTileEntity) {
             ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
             NBTTagCompound tagCompound = new NBTTagCompound();
@@ -58,7 +57,7 @@ public class MachineBlock extends GenericBlock {
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (willHarvest) {
-            return true; // If it harvests, delay deletion of the block until after getDrops
+            return true;
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
