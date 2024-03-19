@@ -1,6 +1,5 @@
 package com.extralent.common.block.BlockTileEntities;
 
-import com.extralent.api.tools.TEnergyStorage;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.api.tools.MachineHelper;
@@ -17,7 +16,6 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,7 +25,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileElectricFurnace extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
@@ -38,7 +35,6 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
     private FurnaceState state = FurnaceState.NOPOWER;
 
     private int clientEnergy = -1;
-    private int currentInputSlot;
 
     public TileElectricFurnace() {
         super(SIZE, ElectricFurnaceConfig.MAX_POWER, ElectricFurnaceConfig.RF_PER_TICK_INPUT);
@@ -110,10 +106,9 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
             ItemStack result = !input.isEmpty() ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
 
             if (!result.isEmpty()) {
-                currentInputSlot = i;
 
                 if (insertOutput(result.copy(), false)) {
-                    energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK * currentInputSlot);
+                    energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK * i);
 
                     inputHandler.extractItem(i, 1, false);
                     markDirty();
@@ -168,7 +163,6 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
 
     //------------------------------------------------------------------------
 
-    // This item handler will hold our three input slots
     private final ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
@@ -182,7 +176,6 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
         }
     };
 
-    // This item handler will hold our three output slots
     private final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {

@@ -156,7 +156,6 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
 
     //------------------------------------------------------------------------
 
-    // This item handler will hold our three input slots
     private final ItemStackHandler inputHandler = new ItemStackHandler(INPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
@@ -169,7 +168,6 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
         }
     };
 
-    // This item handler will hold our three output slots
     private final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {

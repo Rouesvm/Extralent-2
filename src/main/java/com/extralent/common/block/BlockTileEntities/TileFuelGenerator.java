@@ -51,6 +51,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
             } else {
                 progress = 0;
 
+                setState(MachineState.OFF);
                 if (!canSmelt()) {
                     return;
                 }
@@ -67,6 +68,8 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
         if (!input.isEmpty()) {
             int fuelBurnTime = getBurnTime(input);
             if (fuelBurnTime > 0) {
+                setState(MachineState.ON);
+
                 totalBurnTime = fuelBurnTime;
                 progress = fuelBurnTime;
 
@@ -241,7 +244,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == null) {
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(combinedHandler);
-            } else if (facing == EnumFacing.UP) {
+            } else {
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputHandler);
             }
         }

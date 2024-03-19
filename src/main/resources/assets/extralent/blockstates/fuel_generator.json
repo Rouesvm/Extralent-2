@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "extralent:fuel_generator",
+    "textures": {
+      "front": "extralent:blocks/fuel_generator_front"
+    }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}],
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "west": {"y": 270},
+      "east": {"y": 90},
+      "up": {"y": -90},
+      "down": {"y": 90}
+    },
+    "state": {
+      "off": { "textures": { "front": "extralent:blocks/fuel_generator_front" } },
+      "on": { "textures": { "front": "extralent:blocks/fuel_generator_front_on" } },
+      "no_power": { "textures": { "front": "extralent:blocks/fuel_generator_front" } }
+    }
+  }
+}
