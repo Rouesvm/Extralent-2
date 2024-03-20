@@ -56,7 +56,7 @@ public class GuiFuelGenerator extends GuiContainer {
     }
 
     private void drawEnergyBar(int energy) {
-        int percentage = energy * 57 / FuseMachineConfig.MAX_POWER;
+        int percentage = energy * 57 / 325000;
         for (int i = 0; i < percentage; i++) {
             int color = i % 2 == 0 ? 0xffee1c00 : 0xffbd1600;
             drawHorizontalLine(guiLeft + 10, guiLeft + 18, (guiTop + 63 - 1) - i, color);

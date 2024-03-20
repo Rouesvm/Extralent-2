@@ -21,8 +21,8 @@ public class TEnergyStorage extends EnergyStorage {
 
     public void generatePower(int energy) {
         this.energy += energy;
-        if (this.energy > capacity) {
-            this.energy = capacity;
+        if (this.energy >= this.capacity) {
+            this.energy = this.capacity;
         }
     }
 }

@@ -65,10 +65,10 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
                 energyStorage.consumePower(FuseMachineConfig.RF_PER_TICK);
                 progress--;
                 if (progress <= 0) {
-                    attemptFusing();
+                    attempt();
                 }
             } else {
-                startFusing();
+                start();
             }
         }
     }
@@ -83,7 +83,7 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
         return false;
     }
 
-    private void startFusing() {
+    private void start() {
         RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
         if (recipe == null) {
             setState(MachineState.OFF);
@@ -99,7 +99,7 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
         }
     }
 
-    private void attemptFusing() {
+    private void attempt() {
         RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
         if (recipe == null) {
             setState(MachineState.OFF);

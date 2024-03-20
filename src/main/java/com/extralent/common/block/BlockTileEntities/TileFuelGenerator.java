@@ -37,7 +37,7 @@ public class TileFuelGenerator extends TileMachineEntity implements ITickable, I
     private int clientEnergy = -1;
 
     public TileFuelGenerator() {
-        super(INPUT_SLOTS, 350000, 0);
+        super(INPUT_SLOTS, 325000, 0);
     }
 
     @Override

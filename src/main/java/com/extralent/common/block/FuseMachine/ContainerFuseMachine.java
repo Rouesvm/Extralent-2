@@ -20,20 +20,14 @@ public class ContainerFuseMachine extends Container implements IMachineStateCont
 
     private final TileFuseMachine tileEntity;
 
-    private static final int PROGRESS_ID = 0;
-
     public ContainerFuseMachine(IInventory playerInventory, TileFuseMachine tileEntity) {
         this.tileEntity = tileEntity;
 
-        // This container references items out of our own inventory (the 9 slots we hold ourselves)
-        // as well as the slots from the player inventory so that the user can transfer items between
-        // both inventories. The two calls below make sure that slots are defined for both inventories.
         addOwnSlots();
         addPlayerSlots(playerInventory);
     }
 
     private void addPlayerSlots(IInventory playerInventory) {
-        // Slots for the main inventory
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 int x = 10 + col * 18;
@@ -42,7 +36,6 @@ public class ContainerFuseMachine extends Container implements IMachineStateCont
             }
         }
 
-        // Slots for the hotbar
         for (int row = 0; row < 9; ++row) {
             int x = 10 + row * 18;
             int y = 58 + 70;
@@ -102,8 +95,7 @@ public class ContainerFuseMachine extends Container implements IMachineStateCont
         super.detectAndSendChanges();
         if (!tileEntity.getWorld().isRemote) {
             if (tileEntity.getEnergy() != tileEntity.getClientEnergy() || tileEntity.getProgress() != tileEntity.getClientProgress()) {
-                tileEntity.setClientEnergy(tileEntity.getEnergy());
-                tileEntity.setClientProgress(tileEntity.getProgress());
+                sync(tileEntity.getEnergy(), tileEntity.getProgress());
 
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {

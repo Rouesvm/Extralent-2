@@ -20,14 +20,9 @@ public class ContainerElectricFurnace extends Container implements IMachineState
 
     private final TileElectricFurnace tileEntity;
 
-    private static final int PROGRESS_ID = 0;
-
     public ContainerElectricFurnace(IInventory playerInventory, TileElectricFurnace tileEntity) {
         this.tileEntity = tileEntity;
 
-        // This container references items out of our own inventory (the 9 slots we hold ourselves)
-        // as well as the slots from the player inventory so that the user can transfer items between
-        // both inventories. The two calls below make sure that slots are defined for both inventories.
         addOwnSlots();
         addPlayerSlots(playerInventory);
     }
@@ -102,9 +97,10 @@ public class ContainerElectricFurnace extends Container implements IMachineState
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         if (!tileEntity.getWorld().isRemote) {
-            if (tileEntity.getEnergy() != tileEntity.getClientEnergy() || tileEntity.getProgress() != tileEntity.getClientProgress()) {
-                tileEntity.setClientEnergy(tileEntity.getEnergy());
-                tileEntity.setClientProgress(tileEntity.getProgress());
+            if (tileEntity.getEnergy() != tileEntity.getClientEnergy() ||
+                    tileEntity.getProgress() != tileEntity.getClientProgress())
+            {
+                sync(tileEntity.getEnergy(), tileEntity.getProgress());
 
                 for (IContainerListener listener : listeners) {
                     if (listener instanceof EntityPlayerMP) {

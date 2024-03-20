@@ -45,13 +45,13 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
         if (!getWorld().isRemote) {
             if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
                 setState(FurnaceState.NOPOWER);
-                setProgress(0);
+                progress = 0;
                 return;
             }
 
             if (MachineHelper.isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
                 setState(FurnaceState.OFF);
-                setProgress(0);
+                progress = 0;
                 return;
             }
 
@@ -59,10 +59,10 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
                 setState(FurnaceState.ON);
                 progress--;
                 if (progress == 0) {
-                    attemptSmelt();
+                    attempt();
                 }
             } else {
-                startSmelt();
+                start();
             }
         }
     }
@@ -77,7 +77,7 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
         return false;
     }
 
-    private void startSmelt() {
+    private void start() {
         boolean canSmelt = false;
 
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
@@ -100,7 +100,7 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
         }
     }
 
-    private void attemptSmelt() {
+    private void attempt() {
         for (int i = 0 ; i < INPUT_SLOTS ; i++) {
             ItemStack input = inputHandler.getStackInSlot(i);
             ItemStack result = !input.isEmpty() ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
@@ -115,10 +115,6 @@ public class TileElectricFurnace extends TileMachineEntity implements ITickable,
                 }
             }
         }
-    }
-
-    public void setProgress(int progress) {
-        this.progress = progress;
     }
 
     public int getClientEnergy() {
