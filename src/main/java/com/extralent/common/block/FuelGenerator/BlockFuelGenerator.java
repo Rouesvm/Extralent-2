@@ -1,7 +1,7 @@
 package com.extralent.common.block.FuelGenerator;
 
+import com.extralent.common.tile.TileFuelGenerator;
 import com.extralent.common.block.MachineBlock;
-import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;

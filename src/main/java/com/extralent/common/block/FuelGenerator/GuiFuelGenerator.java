@@ -1,9 +1,7 @@
 package com.extralent.common.block.FuelGenerator;
 
-import akka.io.SelectionHandlerSettings;
-import com.extralent.common.config.FuseMachineConfig;
+import com.extralent.common.tile.TileFuelGenerator;
 import com.extralent.common.misc.ModMisc;
-import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +14,6 @@ public class GuiFuelGenerator extends GuiContainer {
     public static final int HEIGHT = 152;
 
     public int progressHeight = 13;
-    public int arrowLength = progressHeight + 1;
 
     private static final ResourceLocation TEXTURES = new ResourceLocation(ModMisc.MODID, "textures/gui/fuel_generator_gui.png");
     private final TileFuelGenerator furnace;

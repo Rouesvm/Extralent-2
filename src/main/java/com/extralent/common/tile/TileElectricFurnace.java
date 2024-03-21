@@ -1,8 +1,9 @@
-package com.extralent.common.block.BlockTileEntities;
+package com.extralent.common.tile;
 
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.api.tools.MachineHelper;
+import com.extralent.common.base.tile.MachineBaseEntity;
 import com.extralent.common.block.ElectricFurnace.ContainerElectricFurnace;
 import com.extralent.common.block.ElectricFurnace.FurnaceState;
 import com.extralent.common.block.ElectricFurnace.GuiElectricFurnace;
@@ -26,7 +27,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
-public class TileElectricFurnace extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileElectricFurnace extends MachineBaseEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 3;
     public static final int OUTPUT_SLOTS = 3;

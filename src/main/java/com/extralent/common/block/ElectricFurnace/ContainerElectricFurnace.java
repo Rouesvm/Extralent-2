@@ -3,46 +3,24 @@ package com.extralent.common.block.ElectricFurnace;
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
+import com.extralent.common.base.gui.GenericContainer;
 import com.extralent.common.config.ElectricFurnaceConfig;
-import com.extralent.common.block.BlockTileEntities.TileElectricFurnace;
+import com.extralent.common.tile.TileElectricFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerElectricFurnace extends Container implements IMachineStateContainer {
+import javax.annotation.Nonnull;
 
-    private final TileElectricFurnace tileEntity;
+public class ContainerElectricFurnace extends GenericContainer<TileElectricFurnace> implements IMachineStateContainer {
 
     public ContainerElectricFurnace(IInventory playerInventory, TileElectricFurnace tileEntity) {
-        this.tileEntity = tileEntity;
-
+        super(TileElectricFurnace.SIZE, playerInventory, tileEntity);
         addOwnSlots();
-        addPlayerSlots(playerInventory);
-    }
-
-    private void addPlayerSlots(IInventory playerInventory) {
-        // Slots for the main inventory
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                int x = 10 + col * 18;
-                int y = row * 18 + 70;
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 10, x, y));
-            }
-        }
-
-        // Slots for the hotbar
-        for (int row = 0; row < 9; ++row) {
-            int x = 10 + row * 18;
-            int y = 58 + 70;
-            this.addSlotToContainer(new Slot(playerInventory, row, x, y));
-        }
     }
 
     private void addOwnSlots() {
@@ -62,34 +40,7 @@ public class ContainerElectricFurnace extends Container implements IMachineState
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (index < TileElectricFurnace.SIZE) {
-                if (!this.mergeItemStack(itemStack1, TileElectricFurnace.SIZE, this.inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.mergeItemStack(itemStack1, 0, TileElectricFurnace.SIZE, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemStack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-        }
-
-        return itemStack;
-    }
-
-    @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return tileEntity.canInteractWith(playerIn);
     }
 

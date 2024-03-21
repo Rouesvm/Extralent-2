@@ -1,8 +1,8 @@
 package com.extralent.common.block.ElectricFurnace;
 
+import com.extralent.common.tile.TileElectricFurnace;
 import com.extralent.common.config.ElectricFurnaceConfig;
 import com.extralent.common.misc.ModMisc;
-import com.extralent.common.block.BlockTileEntities.TileElectricFurnace;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;

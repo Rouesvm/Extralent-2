@@ -1,11 +1,11 @@
 package com.extralent.common.block;
 
+import com.extralent.common.tile.TileFuelGenerator;
+import com.extralent.common.tile.TileFuseMachine;
 import com.extralent.common.block.ElectricFurnace.BlockElectricFurnace;
 import com.extralent.common.block.FuelGenerator.BlockFuelGenerator;
-import com.extralent.common.block.BlockTileEntities.TileElectricFurnace;
+import com.extralent.common.tile.TileElectricFurnace;
 import com.extralent.common.block.FuseMachine.BlockFuseMachine;
-import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
-import com.extralent.common.block.BlockTileEntities.TileFuseMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -47,7 +47,7 @@ public class ModBlocks {
     public static void registerModels() {
         for (GenericBlock block : blockList) {
             block.registerItemModel();
-        };
+        }
     }
 
     public static void registerOreDict() {

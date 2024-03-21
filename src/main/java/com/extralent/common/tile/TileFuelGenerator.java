@@ -1,16 +1,11 @@
-package com.extralent.common.block.BlockTileEntities;
+package com.extralent.common.tile;
 
-import com.extralent.api.tools.TEnergyStorage;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
-import com.extralent.api.tools.MachineHelper;
-import com.extralent.api.tools.RecipeAPI;
-import com.extralent.client.sounds.SoundHandler;
-import com.extralent.common.block.FuseMachine.ContainerFuseMachine;
-import com.extralent.common.block.FuseMachine.GuiFuseMachine;
-import com.extralent.common.block.FuseMachine.MachineState;
-import com.extralent.common.config.FuseMachineConfig;
-import com.extralent.common.recipe.RecipeHandler;
+import com.extralent.common.base.tile.MachineBaseEntity;
+import com.extralent.common.block.FuelGenerator.ContainerFuelGenerator;
+import com.extralent.common.block.FuelGenerator.GuiFuelGenerator;
+import com.extralent.common.block.FuelGenerator.MachineState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,98 +15,94 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class TileFuseMachine extends TileMachineEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileFuelGenerator extends MachineBaseEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
-    public static final int INPUT_SLOTS = 2;
-    public static final int OUTPUT_SLOTS = 1;
-    public static final int SIZE = INPUT_SLOTS + OUTPUT_SLOTS;
+    public static final int INPUT_SLOTS = 1;
 
-    private MachineState state = MachineState.NOPOWER;
+    private MachineState state = MachineState.OFF;
+
+    private int totalBurnTime = 0;
 
     private int clientEnergy = -1;
 
-    public TileFuseMachine() {
-        super(SIZE, FuseMachineConfig.MAX_POWER, FuseMachineConfig.RF_PER_TICK_INPUT);
+    public TileFuelGenerator() {
+        super(INPUT_SLOTS, 325000, 0);
     }
 
     @Override
     public void update() {
         if (!getWorld().isRemote) {
-            if (energyStorage.getEnergyStored() < FuseMachineConfig.RF_PER_TICK) {
-                setState(MachineState.NOPOWER);
-                progress = 0;
-                return;
-            }
-            if (MachineHelper.isSlotEmpty(INPUT_SLOTS, inputHandler)) {
-                setState(MachineState.OFF);
-                progress = 0;
-                return;
-            }
-
             if (progress > 0) {
-                setState(MachineState.ON);
-                energyStorage.consumePower(FuseMachineConfig.RF_PER_TICK);
+                energyStorage.generatePower(totalBurnTime / 80);
+                markDirty();
+
                 progress--;
-                if (progress <= 0) {
-                    attempt();
-                }
             } else {
+                progress = 0;
+
+                setState(MachineState.OFF);
+                if (!canSmelt()) {
+                    return;
+                }
+
                 start();
             }
-        }
-    }
 
-    private boolean insertOutput(ItemStack output, boolean simulate) {
-        for (int i = 0; i < OUTPUT_SLOTS; i++) {
-            ItemStack remaining = outputHandler.insertItem(i, output, simulate);
-            if (remaining.isEmpty()) {
-                return true;
-            }
+            sendEnergy();
         }
-        return false;
     }
 
     private void start() {
-        RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
-        if (recipe == null) {
-            setState(MachineState.OFF);
-            return;
-        }
+        ItemStack input = inputHandler.getStackInSlot(0);
+        if (!input.isEmpty()) {
+            int fuelBurnTime = getBurnTime(input);
+            if (fuelBurnTime > 0) {
+                setState(MachineState.ON);
 
-        ItemStack result = recipe.getCraftingResult(inputHandler);
-        if (insertOutput(result.copy(), true)) {
-            setState(MachineState.ON);
-            progress = FuseMachineConfig.MAX_PROGRESS;
-            world.playSound(null, pos, SoundHandler.FUSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            markDirty();
+                totalBurnTime = fuelBurnTime;
+                progress = fuelBurnTime;
+
+                inputHandler.extractItem(0, 1, false);
+                markDirty();
+            }
         }
     }
 
-    private void attempt() {
-        RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
-        if (recipe == null) {
-            setState(MachineState.OFF);
-            return;
+    private boolean canSmelt() {
+        ItemStack input = inputHandler.getStackInSlot(0);
+        if (isFuelItemValidForSlot(input)) {
+            markDirty();
+            return true;
         }
 
-        ItemStack result = recipe.getCraftingResult(inputHandler);
-        if (insertOutput(result.copy(), false)) {
-            inputHandler.extractItem(0, 1, false);
-            inputHandler.extractItem(1, 1, false);
-            markDirty();
+        return false;
+    }
+
+    public static int getBurnTime(ItemStack item) {
+        return TileEntityFurnace.getItemBurnTime(item);
+    }
+
+    public boolean isFuelItemValidForSlot(ItemStack item) {
+        return TileEntityFurnace.isItemFuel(item);
+    }
+
+    public int getCurrentMaxBurnTime() {
+        if (progress <= 0 || totalBurnTime <= 0) {
+            return 0;
         }
+        return (progress * 100) / (totalBurnTime);
     }
 
     public int getClientEnergy() {
@@ -120,6 +111,29 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
 
     public void setClientEnergy(int clientEnergy) {
         this.clientEnergy = clientEnergy;
+    }
+
+    //------------------------------------------------------------------------
+
+    private void sendEnergy() {
+        if (energyStorage.getEnergyStored() <= 0) {
+            return;
+        }
+
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
+            if (tileEntity != null && tileEntity.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+                IEnergyStorage handler = tileEntity.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
+                if (handler != null && handler.canReceive()) {
+                    int accepted = handler.receiveEnergy(energyStorage.getEnergyStored(), false);
+                    energyStorage.consumePower(accepted);
+                    if (energyStorage.getEnergyStored() <= 0) {
+                        break;
+                    }
+                }
+            }
+        }
+        markDirty();
     }
 
     //------------------------------------------------------------------------
@@ -164,23 +178,13 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
 
         @Override
         protected void onContentsChanged(int slot) {
-            TileFuseMachine.this.markDirty();
+            TileFuelGenerator.this.markDirty();
         }
     };
 
-    private final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return false;
-        }
+    private final CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler);
 
-        @Override
-        protected void onContentsChanged(int slot) {
-            TileFuseMachine.this.markDirty();
-        }
-    };
-
-    private final CombinedInvWrapper combinedHandler = new CombinedInvWrapper(inputHandler, outputHandler);
+    //------------------------------------------------------------------------
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -194,10 +198,8 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
         if (compound.hasKey("itemsIn")) {
             inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
         }
-        if (compound.hasKey("itemsOut")) {
-            outputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsOut"));
-        }
         progress = compound.getInteger("progress");
+        totalBurnTime = compound.getInteger("totalBurnTime");
         energyStorage.setEnergy(compound.getInteger("energy"));
     }
 
@@ -212,19 +214,19 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
     @Override
     public void writeRestorableToNBT(NBTTagCompound compound) {
         compound.setTag("itemsIn", inputHandler.serializeNBT());
-        compound.setTag("itemsOut", outputHandler.serializeNBT());
         compound.setInteger("progress", progress);
+        compound.setInteger("totalBurnTime", totalBurnTime);
         compound.setInteger("energy", energyStorage.getEnergyStored());
     }
 
     @Override
     public Container createContainer(EntityPlayer player) {
-        return new ContainerFuseMachine(player.inventory, this);
+        return new ContainerFuelGenerator(player.inventory, this);
     }
 
     @Override
     public GuiContainer createGui(EntityPlayer player) {
-        return new GuiFuseMachine(this, new ContainerFuseMachine(player.inventory, this));
+        return new GuiFuelGenerator(this, new ContainerFuelGenerator(player.inventory, this));
     }
 
     @Override
@@ -243,10 +245,8 @@ public class TileFuseMachine extends TileMachineEntity implements ITickable, IRe
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == null) {
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(combinedHandler);
-            } else if (facing == EnumFacing.UP) {
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputHandler);
             } else {
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputHandler);
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputHandler);
             }
         }
         if (capability == CapabilityEnergy.ENERGY) {

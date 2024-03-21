@@ -3,42 +3,23 @@ package com.extralent.common.block.FuelGenerator;
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
-import com.extralent.common.block.BlockTileEntities.TileFuelGenerator;
+import com.extralent.common.base.gui.GenericContainer;
+import com.extralent.common.tile.TileFuelGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerFuelGenerator extends Container implements IMachineStateContainer {
+import javax.annotation.Nonnull;
 
-    private final TileFuelGenerator tileEntity;
+public class ContainerFuelGenerator extends GenericContainer<TileFuelGenerator> implements IMachineStateContainer {
 
     public ContainerFuelGenerator(IInventory playerInventory, TileFuelGenerator tileEntity) {
-        this.tileEntity = tileEntity;
+        super(TileFuelGenerator.INPUT_SLOTS, playerInventory, tileEntity);
         addOwnSlots();
-        addPlayerSlots(playerInventory);
-    }
-
-    private void addPlayerSlots(IInventory playerInventory) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                int x = 10 + col * 18;
-                int y = row * 18 + 70;
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 10, x, y));
-            }
-        }
-
-        for (int row = 0; row < 9; ++row) {
-            int x = 10 + row * 18;
-            int y = 58 + 70;
-            this.addSlotToContainer(new Slot(playerInventory, row, x, y));
-        }
     }
 
     private void addOwnSlots() {
@@ -50,34 +31,7 @@ public class ContainerFuelGenerator extends Container implements IMachineStateCo
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (index < TileFuelGenerator.INPUT_SLOTS) {
-                if (!this.mergeItemStack(itemStack1, TileFuelGenerator.INPUT_SLOTS, this.inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.mergeItemStack(itemStack1, 0, TileFuelGenerator.INPUT_SLOTS, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemStack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-        }
-
-        return itemStack;
-    }
-
-    @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return tileEntity.canInteractWith(playerIn);
     }
 

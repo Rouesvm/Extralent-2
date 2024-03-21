@@ -3,44 +3,22 @@ package com.extralent.common.block.FuseMachine;
 import com.extralent.api.network.Messages;
 import com.extralent.api.network.PacketSyncMachineState;
 import com.extralent.api.tools.Interfaces.IMachineStateContainer;
+import com.extralent.common.base.gui.GenericContainer;
 import com.extralent.common.config.FuseMachineConfig;
-import com.extralent.common.block.BlockTileEntities.TileFuseMachine;
+import com.extralent.common.tile.TileFuseMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerFuseMachine extends Container implements IMachineStateContainer {
-
-    private final TileFuseMachine tileEntity;
+public class ContainerFuseMachine extends GenericContainer<TileFuseMachine> implements IMachineStateContainer {
 
     public ContainerFuseMachine(IInventory playerInventory, TileFuseMachine tileEntity) {
-        this.tileEntity = tileEntity;
-
+        super(TileFuseMachine.SIZE, playerInventory, tileEntity);
         addOwnSlots();
-        addPlayerSlots(playerInventory);
-    }
-
-    private void addPlayerSlots(IInventory playerInventory) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                int x = 10 + col * 18;
-                int y = row * 18 + 70;
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 10, x, y));
-            }
-        }
-
-        for (int row = 0; row < 9; ++row) {
-            int x = 10 + row * 18;
-            int y = 58 + 70;
-            this.addSlotToContainer(new Slot(playerInventory, row, x, y));
-        }
     }
 
     private void addOwnSlots() {
@@ -50,39 +28,8 @@ public class ContainerFuseMachine extends Container implements IMachineStateCont
 
         int slotIndex = 0;
         addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
-        y += 20;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
-
-        y = 33;
-        x = 115;
-        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y));
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (index < TileFuseMachine.SIZE) {
-                if (!this.mergeItemStack(itemStack1, TileFuseMachine.SIZE, this.inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.mergeItemStack(itemStack1, 0, TileFuseMachine.SIZE, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemStack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-        }
-
-        return itemStack;
+        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, x, y + 20));
+        addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex++, 115, 33));
     }
 
     @Override

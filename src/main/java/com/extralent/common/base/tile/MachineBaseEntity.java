@@ -1,4 +1,4 @@
-package com.extralent.common.block.BlockTileEntities;
+package com.extralent.common.base.tile;
 
 import com.extralent.api.tools.TEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 
-public class TileMachineEntity extends TileEntity {
+public class MachineBaseEntity extends TileEntity {
 
     protected int Slots;
     protected int maxEnergyStored;
@@ -18,7 +18,7 @@ public class TileMachineEntity extends TileEntity {
 
     protected TEnergyStorage energyStorage;
 
-    public TileMachineEntity(int Slots, int maxEnergyStored, int maxEnergyReceived) {
+    public MachineBaseEntity(int Slots, int maxEnergyStored, int maxEnergyReceived) {
         this.Slots = Slots;
 
         this.maxEnergyStored = maxEnergyStored;

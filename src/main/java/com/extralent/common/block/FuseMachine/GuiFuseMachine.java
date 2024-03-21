@@ -1,8 +1,8 @@
 package com.extralent.common.block.FuseMachine;
 
+import com.extralent.common.tile.TileFuseMachine;
 import com.extralent.common.config.FuseMachineConfig;
 import com.extralent.common.misc.ModMisc;
-import com.extralent.common.block.BlockTileEntities.TileFuseMachine;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;

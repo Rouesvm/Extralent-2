@@ -1,7 +1,7 @@
 package com.extralent.common.block.FuseMachine;
 
+import com.extralent.common.tile.TileFuseMachine;
 import com.extralent.common.block.MachineBlock;
-import com.extralent.common.block.BlockTileEntities.TileFuseMachine;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
