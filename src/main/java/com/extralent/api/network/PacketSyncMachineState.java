@@ -13,13 +13,14 @@ public class PacketSyncMachineState implements IMessage {
     private int energy;
     private int progress;
 
+    public PacketSyncMachineState() {
+    }
+
     public PacketSyncMachineState(int energy, int progress) {
         this.energy = energy;
         this.progress = progress;
     }
 
-    public PacketSyncMachineState() {
-    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
