@@ -2,8 +2,7 @@ package com.extralent.common.tile;
 
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
-import com.extralent.api.tools.MachineHelper;
-import com.extralent.common.base.tile.MachineBaseEntity;
+import com.extralent.common.base.tile.GenericTileEntity;
 import com.extralent.common.block.ElectricFurnace.ContainerElectricFurnace;
 import com.extralent.common.block.ElectricFurnace.FurnaceState;
 import com.extralent.common.block.ElectricFurnace.GuiElectricFurnace;
@@ -27,7 +26,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
-public class TileElectricFurnace extends MachineBaseEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileElectricFurnace extends GenericTileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 3;
     public static final int OUTPUT_SLOTS = 3;
@@ -44,26 +43,24 @@ public class TileElectricFurnace extends MachineBaseEntity implements ITickable,
     @Override
     public void update() {
         if (!getWorld().isRemote) {
-            if (energyStorage.getEnergyStored() < ElectricFurnaceConfig.RF_PER_TICK) {
-                setState(FurnaceState.NOPOWER);
-                progress = 0;
-                return;
-            }
-
-            if (MachineHelper.isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
-                setState(FurnaceState.OFF);
-                progress = 0;
-                return;
-            }
-
-            if (progress > 0) {
-                setState(FurnaceState.ON);
-                progress--;
-                if (progress == 0) {
-                    attempt();
+            if (energyStorage.getEnergyStored() >= ElectricFurnaceConfig.RF_PER_TICK) {
+                if (progress > 0) {
+                    setState(FurnaceState.ON);
+                    progress--;
+                    if (progress == 0) {
+                        attempt();
+                    }
+                } else {
+                    if (!isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
+                        start();
+                    } else {
+                        setState(FurnaceState.OFF);
+                        progress = 0;
+                    }
                 }
             } else {
-                start();
+                setState(FurnaceState.NOPOWER);
+                progress = 0;
             }
         }
     }

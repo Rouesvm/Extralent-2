@@ -1,8 +1,9 @@
-package com.extralent.common.block;
+package com.extralent.common.block.custom;
 
 import com.extralent.Extralent;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
+import com.extralent.common.block.GenericBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;

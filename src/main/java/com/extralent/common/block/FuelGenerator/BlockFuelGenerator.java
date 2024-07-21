@@ -1,7 +1,7 @@
 package com.extralent.common.block.FuelGenerator;
 
 import com.extralent.common.tile.TileFuelGenerator;
-import com.extralent.common.block.MachineBlock;
+import com.extralent.common.block.custom.MachineBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -52,10 +52,11 @@ public class BlockFuelGenerator extends MachineBlock implements ITileEntityProvi
         }
     }
 
-    private int getItemCount(NBTTagCompound tagCompound, String itemsIn2) {
+    private int getItemCount(NBTTagCompound tagCompound, String itemTag) {
         int sizeIn = 0;
-        if (tagCompound.getTag(itemsIn2) != null) {
-            NBTTagCompound compoundIn = (NBTTagCompound) tagCompound.getTag(itemsIn2);
+
+        if (tagCompound.getTag(itemTag) != null) {
+            NBTTagCompound compoundIn = (NBTTagCompound) tagCompound.getTag(itemTag);
             NBTTagList itemsIn = compoundIn.getTagList("Items", Constants.NBT.TAG_COMPOUND);
             for (int i = 0; i < itemsIn.tagCount(); i++) {
                 NBTTagCompound itemTags = itemsIn.getCompoundTagAt(i);
@@ -88,11 +89,6 @@ public class BlockFuelGenerator extends MachineBlock implements ITileEntityProvi
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, STATE);
-    }
-
-    @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
     }
@@ -100,5 +96,10 @@ public class BlockFuelGenerator extends MachineBlock implements ITileEntityProvi
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(FACING).getIndex();
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING, STATE);
     }
 }

@@ -2,12 +2,14 @@ package com.extralent.common.base.tile;
 
 import com.extralent.api.tools.TEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public class MachineBaseEntity extends TileEntity {
+public class GenericTileEntity extends TileEntity {
 
     protected int Slots;
     protected int maxEnergyStored;
@@ -18,13 +20,37 @@ public class MachineBaseEntity extends TileEntity {
 
     protected TEnergyStorage energyStorage;
 
-    public MachineBaseEntity(int Slots, int maxEnergyStored, int maxEnergyReceived) {
+    public GenericTileEntity(int Slots, int maxEnergyStored, int maxEnergyReceived) {
         this.Slots = Slots;
 
         this.maxEnergyStored = maxEnergyStored;
         this.maxEnergyReceived = maxEnergyReceived;
 
         this.energyStorage = new TEnergyStorage(maxEnergyStored, maxEnergyReceived);
+    }
+
+    public static boolean isSlotEmpty(int amount, ItemStackHandler slots) {
+        for (int i = 0; i < amount; i++) {
+            ItemStack empty = slots.getStackInSlot(i);
+            if (empty.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAllSlotEmpty(int amount, ItemStackHandler slots) {
+        int isAllSlotEmpty = 0;
+
+        for (int i = 0; i < amount; i++) {
+            if (slots.getStackInSlot(i).isEmpty()) {
+                isAllSlotEmpty++;
+                if (isAllSlotEmpty == amount) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public int getProgress() {

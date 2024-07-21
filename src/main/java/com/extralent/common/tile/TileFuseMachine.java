@@ -2,10 +2,10 @@ package com.extralent.common.tile;
 
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
-import com.extralent.api.tools.MachineHelper;
-import com.extralent.api.tools.RecipeAPI;
+import com.extralent.common.config.ElectricFurnaceConfig;
+import com.extralent.common.recipe.RecipeAPI;
 import com.extralent.client.sounds.SoundHandler;
-import com.extralent.common.base.tile.MachineBaseEntity;
+import com.extralent.common.base.tile.GenericTileEntity;
 import com.extralent.common.block.FuseMachine.ContainerFuseMachine;
 import com.extralent.common.block.FuseMachine.GuiFuseMachine;
 import com.extralent.common.block.FuseMachine.MachineState;
@@ -30,7 +30,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
-public class TileFuseMachine extends MachineBaseEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileFuseMachine extends GenericTileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 2;
     public static final int OUTPUT_SLOTS = 1;
@@ -47,26 +47,24 @@ public class TileFuseMachine extends MachineBaseEntity implements ITickable, IRe
     @Override
     public void update() {
         if (!getWorld().isRemote) {
-            if (energyStorage.getEnergyStored() < FuseMachineConfig.RF_PER_TICK) {
-                setState(MachineState.NOPOWER);
-                progress = 0;
-                return;
-            }
-            if (MachineHelper.isSlotEmpty(INPUT_SLOTS, inputHandler)) {
-                setState(MachineState.OFF);
-                progress = 0;
-                return;
-            }
-
-            if (progress > 0) {
-                setState(MachineState.ON);
-                energyStorage.consumePower(FuseMachineConfig.RF_PER_TICK);
-                progress--;
-                if (progress <= 0) {
-                    attempt();
+            if (energyStorage.getEnergyStored() >= ElectricFurnaceConfig.RF_PER_TICK) {
+                if (progress > 0) {
+                    setState(MachineState.ON);
+                    progress--;
+                    if (progress == 0) {
+                        attempt();
+                    }
+                } else {
+                    if (!isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
+                        start();
+                    } else {
+                        setState(MachineState.OFF);
+                        progress = 0;
+                    }
                 }
             } else {
-                start();
+                setState(MachineState.NOPOWER);
+                progress = 0;
             }
         }
     }
@@ -83,32 +81,30 @@ public class TileFuseMachine extends MachineBaseEntity implements ITickable, IRe
 
     private void start() {
         RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
-        if (recipe == null) {
+        if (recipe != null) {
+            ItemStack result = recipe.getCraftingResult(inputHandler);
+            if (insertOutput(result.copy(), true)) {
+                setState(MachineState.ON);
+                progress = FuseMachineConfig.MAX_PROGRESS;
+                world.playSound(null, pos, SoundHandler.FUSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                markDirty();
+            }
+        } else {
             setState(MachineState.OFF);
-            return;
-        }
-
-        ItemStack result = recipe.getCraftingResult(inputHandler);
-        if (insertOutput(result.copy(), true)) {
-            setState(MachineState.ON);
-            progress = FuseMachineConfig.MAX_PROGRESS;
-            world.playSound(null, pos, SoundHandler.FUSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            markDirty();
         }
     }
 
     private void attempt() {
         RecipeAPI recipe = RecipeHandler.getRecipeForInput(inputHandler);
-        if (recipe == null) {
+        if (recipe != null) {
+            ItemStack result = recipe.getCraftingResult(inputHandler);
+            if (insertOutput(result.copy(), false)) {
+                inputHandler.extractItem(0, 1, false);
+                inputHandler.extractItem(1, 1, false);
+                markDirty();
+            }
+        } else {
             setState(MachineState.OFF);
-            return;
-        }
-
-        ItemStack result = recipe.getCraftingResult(inputHandler);
-        if (insertOutput(result.copy(), false)) {
-            inputHandler.extractItem(0, 1, false);
-            inputHandler.extractItem(1, 1, false);
-            markDirty();
         }
     }
 
@@ -122,6 +118,7 @@ public class TileFuseMachine extends MachineBaseEntity implements ITickable, IRe
 
     //------------------------------------------------------------------------
 
+    @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbtTag = super.getUpdateTag();
@@ -130,7 +127,7 @@ public class TileFuseMachine extends MachineBaseEntity implements ITickable, IRe
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+    public void onDataPacket(NetworkManager networkManager, SPacketUpdateTileEntity packet) {
         int stateIndex = packet.getNbtCompound().getInteger("state");
 
         if (world.isRemote && stateIndex != state.ordinal()) {

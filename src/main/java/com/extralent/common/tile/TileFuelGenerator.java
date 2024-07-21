@@ -2,7 +2,7 @@ package com.extralent.common.tile;
 
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
-import com.extralent.common.base.tile.MachineBaseEntity;
+import com.extralent.common.base.tile.GenericTileEntity;
 import com.extralent.common.block.FuelGenerator.ContainerFuelGenerator;
 import com.extralent.common.block.FuelGenerator.GuiFuelGenerator;
 import com.extralent.common.block.FuelGenerator.MachineState;
@@ -27,14 +27,13 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
-public class TileFuelGenerator extends MachineBaseEntity implements ITickable, IRestorableTileEntity, IGuiTile {
+public class TileFuelGenerator extends GenericTileEntity implements ITickable, IRestorableTileEntity, IGuiTile {
 
     public static final int INPUT_SLOTS = 1;
 
     private MachineState state = MachineState.OFF;
 
     private int totalBurnTime = 0;
-
     private int clientEnergy = -1;
 
     public TileFuelGenerator() {
@@ -53,11 +52,9 @@ public class TileFuelGenerator extends MachineBaseEntity implements ITickable, I
                 progress = 0;
 
                 setState(MachineState.OFF);
-                if (!canSmelt()) {
-                    return;
+                if (canSmelt()) {
+                    start();
                 }
-
-                start();
             }
 
             sendEnergy();

@@ -1,6 +1,5 @@
 package com.extralent.common.recipe;
 
-import com.extralent.api.tools.RecipeAPI;
 import com.extralent.common.block.ModBlocks;
 import com.extralent.common.item.ModItems;
 import com.extralent.common.recipe.recipeTypes.FusingRecipes;
@@ -14,22 +13,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class RecipeHandler {
+    private static boolean isInit = false;
+
     private static final List<RecipeAPI> recipes = new ArrayList<>();
     private static final Map<ItemStackHandler, RecipeAPI> recipeCache = new HashMap<>();
 
-    public static RecipeAPI getRecipeForInput(ItemStackHandler inv) {
-        if (recipeCache.containsKey(inv)) {
-            return recipeCache.get(inv);
+    public static List<RecipeAPI> getRecipeList() {
+        if (!isInit) {
+            isInit = true;
+        }
+        return recipes;
+    }
+
+    public static RecipeAPI getRecipeForInput(ItemStackHandler inputInventory) {
+        if (recipeCache.containsKey(inputInventory)) {
+            return recipeCache.get(inputInventory);
         }
 
         for (RecipeAPI recipe : recipes) {
-            if (recipe.matches(inv)) {
-                recipeCache.put(inv, recipe);
+            if (recipe.matches(inputInventory)) {
+                recipeCache.put(inputInventory, recipe);
                 return recipe;
             }
         }
-
-        recipeCache.put(inv, null);
         return null;
     }
 

@@ -1,4 +1,4 @@
-package com.extralent.api.tools;
+package com.extralent.common.recipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -16,6 +16,14 @@ public class RecipeAPI {
     public RecipeAPI(NonNullList<ItemStack> inputs, ItemStack output) {
         this.inputs = inputs;
         this.output = output;
+    }
+
+    public NonNullList<ItemStack> getInput() {
+        return inputs;
+    }
+
+    public ItemStack getOutput() {
+        return output;
     }
 
     public boolean matches(ItemStackHandler inv) {
