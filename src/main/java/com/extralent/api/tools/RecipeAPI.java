@@ -1,4 +1,4 @@
-package com.extralent.common.recipe;
+package com.extralent.api.tools;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;

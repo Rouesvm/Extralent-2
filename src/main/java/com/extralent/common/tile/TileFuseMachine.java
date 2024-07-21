@@ -3,7 +3,7 @@ package com.extralent.common.tile;
 import com.extralent.api.tools.Interfaces.IGuiTile;
 import com.extralent.api.tools.Interfaces.IRestorableTileEntity;
 import com.extralent.common.config.ElectricFurnaceConfig;
-import com.extralent.common.recipe.RecipeAPI;
+import com.extralent.api.tools.RecipeAPI;
 import com.extralent.client.sounds.SoundHandler;
 import com.extralent.common.base.tile.GenericTileEntity;
 import com.extralent.common.block.FuseMachine.ContainerFuseMachine;
