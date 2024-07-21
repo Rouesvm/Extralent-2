@@ -47,9 +47,9 @@ public class TileElectricFurnace extends GenericTileEntity implements ITickable,
                 if (progress > 0) {
                     setState(FurnaceState.ON);
                     progress--;
-                    if (progress == 0) {
+
+                    if (progress == 0)
                         attempt();
-                    }
                 } else {
                     if (!isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
                         start();
@@ -68,9 +68,8 @@ public class TileElectricFurnace extends GenericTileEntity implements ITickable,
     private boolean insertOutput(ItemStack output, boolean simulate) {
         for (int i = 0 ; i < OUTPUT_SLOTS ; i++) {
             ItemStack remaining = outputHandler.insertItem(i, output, simulate);
-            if (remaining.isEmpty()) {
+            if (remaining.isEmpty())
                 return true;
-            }
         }
         return false;
     }
@@ -104,7 +103,6 @@ public class TileElectricFurnace extends GenericTileEntity implements ITickable,
             ItemStack result = !input.isEmpty() ? FurnaceRecipes.instance().getSmeltingResult(input.copy()) : ItemStack.EMPTY;
 
             if (!result.isEmpty()) {
-
                 if (insertOutput(result.copy(), false)) {
                     energyStorage.consumePower(ElectricFurnaceConfig.RF_PER_TICK * i);
 
@@ -195,12 +193,11 @@ public class TileElectricFurnace extends GenericTileEntity implements ITickable,
 
     @Override
     public void readRestorableFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("itemsIn")) {
+        if (compound.hasKey("itemsIn"))
             inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
-        }
-        if (compound.hasKey("itemsOut")) {
+        if (compound.hasKey("itemsOut"))
             outputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsOut"));
-        }
+
         progress = compound.getInteger("progress");
         energyStorage.setEnergy(compound.getInteger("energy"));
     }
@@ -253,9 +250,8 @@ public class TileElectricFurnace extends GenericTileEntity implements ITickable,
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputHandler);
             }
         }
-        if (capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY)
             return CapabilityEnergy.ENERGY.cast(energyStorage);
-        }
         return super.getCapability(capability, facing);
     }
 }

@@ -50,13 +50,11 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
                 progress--;
             } else {
                 progress = 0;
-
                 setState(MachineState.OFF);
-                if (canSmelt()) {
-                    start();
-                }
-            }
 
+                if (canSmelt())
+                    start();
+            }
             sendEnergy();
         }
     }
@@ -96,9 +94,8 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
     }
 
     public int getCurrentMaxBurnTime() {
-        if (progress <= 0 || totalBurnTime <= 0) {
+        if (progress <= 0 || totalBurnTime <= 0)
             return 0;
-        }
         return (progress * 100) / (totalBurnTime);
     }
 
@@ -113,9 +110,8 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
     //------------------------------------------------------------------------
 
     private void sendEnergy() {
-        if (energyStorage.getEnergyStored() <= 0) {
+        if (energyStorage.getEnergyStored() <= 0)
             return;
-        }
 
         for (EnumFacing facing : EnumFacing.VALUES) {
             TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
@@ -124,9 +120,8 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
                 if (handler != null && handler.canReceive()) {
                     int accepted = handler.receiveEnergy(energyStorage.getEnergyStored(), false);
                     energyStorage.consumePower(accepted);
-                    if (energyStorage.getEnergyStored() <= 0) {
+                    if (energyStorage.getEnergyStored() <= 0)
                         break;
-                    }
                 }
             }
         }
@@ -192,9 +187,9 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
 
     @Override
     public void readRestorableFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("itemsIn")) {
+        if (compound.hasKey("itemsIn"))
             inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
-        }
+
         progress = compound.getInteger("progress");
         totalBurnTime = compound.getInteger("totalBurnTime");
         energyStorage.setEnergy(compound.getInteger("energy"));
@@ -228,12 +223,11 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
-        }
-        if (capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY)
             return true;
-        }
+
         return super.hasCapability(capability, facing);
     }
 
@@ -246,9 +240,9 @@ public class TileFuelGenerator extends GenericTileEntity implements ITickable, I
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputHandler);
             }
         }
-        if (capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY)
             return CapabilityEnergy.ENERGY.cast(energyStorage);
-        }
+
         return super.getCapability(capability, facing);
     }
 }

@@ -51,9 +51,8 @@ public class TileFuseMachine extends GenericTileEntity implements ITickable, IRe
                 if (progress > 0) {
                     setState(MachineState.ON);
                     progress--;
-                    if (progress == 0) {
+                    if (progress == 0)
                         attempt();
-                    }
                 } else {
                     if (!isAllSlotEmpty(INPUT_SLOTS, inputHandler)) {
                         start();
@@ -72,9 +71,8 @@ public class TileFuseMachine extends GenericTileEntity implements ITickable, IRe
     private boolean insertOutput(ItemStack output, boolean simulate) {
         for (int i = 0; i < OUTPUT_SLOTS; i++) {
             ItemStack remaining = outputHandler.insertItem(i, output, simulate);
-            if (remaining.isEmpty()) {
+            if (remaining.isEmpty())
                 return true;
-            }
         }
         return false;
     }
@@ -186,12 +184,11 @@ public class TileFuseMachine extends GenericTileEntity implements ITickable, IRe
 
     @Override
     public void readRestorableFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("itemsIn")) {
+        if (compound.hasKey("itemsIn"))
             inputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsIn"));
-        }
-        if (compound.hasKey("itemsOut")) {
+        if (compound.hasKey("itemsOut"))
             outputHandler.deserializeNBT((NBTTagCompound) compound.getTag("itemsOut"));
-        }
+
         progress = compound.getInteger("progress");
         energyStorage.setEnergy(compound.getInteger("energy"));
     }
@@ -224,12 +221,11 @@ public class TileFuseMachine extends GenericTileEntity implements ITickable, IRe
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
-        }
-        if (capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY)
             return true;
-        }
+
         return super.hasCapability(capability, facing);
     }
 
